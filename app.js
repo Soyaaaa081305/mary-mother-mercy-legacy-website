@@ -6,6 +6,7 @@ const session = require('express-session');
 const methodOverride = require('method-override');
 
 const { getOne } = require('./src/config/db');
+const { csrfProtection } = require('./src/middleware/csrf');
 const publicRoutes = require('./src/routes/publicRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
@@ -48,6 +49,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(csrfProtection);
+
 app.use(async (req, res, next) => {
   try {
     const siteInfo = await getOne(
@@ -64,7 +67,7 @@ app.use(async (req, res, next) => {
     res.locals.siteInfo = siteInfo || {};
     res.locals.googleMapEmbedSrc = process.env.GOOGLE_MAPS_EMBED_API_KEY
       ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(process.env.GOOGLE_MAPS_EMBED_API_KEY)}&q=${encodedMapQuery}`
-      : null;
+      : `https://www.google.com/maps?q=${encodedMapQuery}&output=embed`;
     res.locals.googleMapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodedMapQuery}`;
     next();
   } catch (error) {

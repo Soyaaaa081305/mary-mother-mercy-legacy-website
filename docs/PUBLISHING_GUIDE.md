@@ -2,6 +2,12 @@
 
 This guide is for turning the local academic project into a published website.
 
+For deeper setup details, also read:
+
+- `docs/PAYMONGO_STEP_BY_STEP.md`
+- `docs/GOOGLE_MAPS_STEP_BY_STEP.md`
+- `docs/PRODUCTION_DEPLOYMENT_SECURITY.md`
+
 ## 1. Prepare Real Content
 
 Before publishing:
@@ -53,7 +59,7 @@ FOUNDATION_MAP_QUERY=Exact foundation address or place name
 - YouTube URL
 - Google Maps Search Query
 
-If no API key is set, the footer shows an external Google Maps search link instead of an embedded map.
+If no API key is set, the footer now uses a simple Google Maps iframe fallback. For production, use the official Maps Embed API key and restrict it to your domain.
 
 ## 4. PayMongo Setup
 
@@ -190,4 +196,3 @@ FOUNDATION_MAP_QUERY=exact address here
 - [ ] Privacy-safe content reviewed
 - [ ] Real contact information verified
 - [ ] Admin accounts limited to authorized staff
-

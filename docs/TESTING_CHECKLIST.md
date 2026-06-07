@@ -36,6 +36,8 @@
 - [ ] Wrong password is rejected
 - [ ] Logout works
 - [ ] Admin pages redirect to login when not authenticated
+- [ ] Form submissions include CSRF token
+- [ ] PayMongo webhook endpoint remains reachable without CSRF token
 
 ## Role-Based Access
 

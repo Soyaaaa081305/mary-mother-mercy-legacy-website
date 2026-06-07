@@ -1,3 +1,17 @@
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+if (csrfToken) {
+  document.querySelectorAll('form[method="post"], form[method="POST"]').forEach((form) => {
+    if (!form.querySelector('input[name="_csrf"]')) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = '_csrf';
+      input.value = csrfToken;
+      form.appendChild(input);
+    }
+  });
+}
+
 const navToggle = document.querySelector('[data-nav-toggle]');
 const siteNav = document.querySelector('[data-site-nav]');
 
@@ -16,4 +30,3 @@ document.querySelectorAll('form[onsubmit]').forEach((form) => {
   });
   form.removeAttribute('onsubmit');
 });
-

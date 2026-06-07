@@ -41,6 +41,7 @@ Browser
 - File upload MIME validation
 - Upload file size limit
 - PayMongo webhook signature verification when `PAYMONGO_WEBHOOK_SECRET` is configured
+- CSRF protection for form submissions, except the PayMongo webhook endpoint
 - Escaped template output through EJS
 - Escaped multiline CMS rendering helper
 - Contact form validation

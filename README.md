@@ -30,6 +30,9 @@ Mary Mother/
 ├── docs/
 │   ├── ADMIN_USER_MANUAL.md
 │   ├── FINAL_CHECKLIST.md
+│   ├── GOOGLE_MAPS_STEP_BY_STEP.md
+│   ├── PAYMONGO_STEP_BY_STEP.md
+│   ├── PRODUCTION_DEPLOYMENT_SECURITY.md
 │   ├── PUBLISHING_GUIDE.md
 │   ├── PROJECT_REPORT_CONTENT.md
 │   ├── TECHNICAL_DOCUMENTATION.md

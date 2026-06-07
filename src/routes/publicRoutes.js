@@ -13,19 +13,27 @@ const renderHelpers = {
   nl2br
 };
 
-async function getPublishedPage(slug) {
+async function getPage(slug) {
   return getOne(
     `SELECT * FROM pages
-     WHERE page_slug = :slug AND status = 'Published'
+     WHERE page_slug = :slug
      LIMIT 1`,
     { slug }
   );
 }
 
+function pageIsPublished(page) {
+  return page && page.status === 'Published';
+}
+
+function renderNotPublished(res, title = 'Page Not Published') {
+  return res.status(404).render('public/not-published', { title });
+}
+
 router.get('/', async (req, res, next) => {
   try {
     const [homePage, legacyEntries, featuredStory, galleryImages, events, videos, supportInfo] = await Promise.all([
-      getPublishedPage('home'),
+      getPage('home'),
       query(
         `SELECT * FROM legacy_entries
          WHERE status = 'Published'
@@ -65,6 +73,10 @@ router.get('/', async (req, res, next) => {
       )
     ]);
 
+    if (homePage && !pageIsPublished(homePage)) {
+      return renderNotPublished(res, 'Home Not Published');
+    }
+
     res.render('public/home', {
       title: 'Home',
       homePage,
@@ -83,8 +95,11 @@ router.get('/', async (req, res, next) => {
 
 router.get('/about', async (req, res, next) => {
   try {
-    const page = await getPublishedPage('about');
-    res.render('public/page', {
+    const page = await getPage('about');
+    if (!pageIsPublished(page)) {
+      return renderNotPublished(res, 'About Not Published');
+    }
+    return res.render('public/page', {
       title: 'About',
       page,
       eyebrow: 'About the Foundation',
@@ -98,7 +113,7 @@ router.get('/about', async (req, res, next) => {
 router.get('/legacy', async (req, res, next) => {
   try {
     const [page, entries] = await Promise.all([
-      getPublishedPage('legacy'),
+      getPage('legacy'),
       query(
         `SELECT * FROM legacy_entries
          WHERE status = 'Published'
@@ -106,7 +121,11 @@ router.get('/legacy', async (req, res, next) => {
       )
     ]);
 
-    res.render('public/legacy', {
+    if (!pageIsPublished(page)) {
+      return renderNotPublished(res, 'Legacy Not Published');
+    }
+
+    return res.render('public/legacy', {
       title: 'Legacy',
       page,
       entries,
@@ -210,7 +229,7 @@ router.get('/gallery', async (req, res, next) => {
 router.get('/support', async (req, res, next) => {
   try {
     const [page, supportInfo] = await Promise.all([
-      getPublishedPage('support'),
+      getPage('support'),
       getOne(
         `SELECT * FROM support_information
          ORDER BY updated_at DESC
@@ -218,7 +237,11 @@ router.get('/support', async (req, res, next) => {
       )
     ]);
 
-    res.render('public/support', {
+    if (!pageIsPublished(page)) {
+      return renderNotPublished(res, 'Support Not Published');
+    }
+
+    return res.render('public/support', {
       title: 'Support',
       page,
       supportInfo,
@@ -233,6 +256,11 @@ router.get('/support', async (req, res, next) => {
 
 router.post('/donate', async (req, res, next) => {
   try {
+    const supportPage = await getPage('support');
+    if (!pageIsPublished(supportPage)) {
+      return renderNotPublished(res, 'Support Not Published');
+    }
+
     const amount = Number(req.body.amount);
     const donation = {
       donor_name: cleanString(req.body.donor_name),
@@ -250,13 +278,16 @@ router.post('/donate', async (req, res, next) => {
 
     if (donationErrors.length) {
       const [page, supportInfo] = await Promise.all([
-        getPublishedPage('support'),
+        getPage('support'),
         getOne(
           `SELECT * FROM support_information
            ORDER BY updated_at DESC
            LIMIT 1`
         )
       ]);
+      if (!pageIsPublished(page)) {
+        return renderNotPublished(res, 'Support Not Published');
+      }
       return res.status(422).render('public/support', {
         title: 'Support',
         page,
@@ -354,10 +385,10 @@ router.post('/webhooks/paymongo', async (req, res, next) => {
       return res.status(400).json({ received: false, error: 'Invalid PayMongo webhook signature.' });
     }
 
-    const event = req.body?.data;
-    const eventType = event?.attributes?.type;
-    const payload = event?.attributes?.data;
-    const resource = payload?.attributes ? payload : payload?.data;
+    const event = req.body?.data || {};
+    const eventType = event.type || event.attributes?.type;
+    const payload = event.data || event.attributes?.data;
+    const resource = payload?.data || payload;
     const attrs = resource?.attributes || {};
     const checkoutSessionId = resource?.id || attrs.checkout_session_id || attrs.checkout_session?.id;
     const referenceNumber = attrs.reference_number || attrs.metadata?.reference_number;
@@ -497,8 +528,11 @@ router.get('/videos', async (req, res, next) => {
 
 router.get('/contact', async (req, res, next) => {
   try {
-    const page = await getPublishedPage('contact');
-    res.render('public/contact', {
+    const page = await getPage('contact');
+    if (!pageIsPublished(page)) {
+      return renderNotPublished(res, 'Contact Not Published');
+    }
+    return res.render('public/contact', {
       title: 'Contact',
       page,
       form: {},
@@ -512,6 +546,11 @@ router.get('/contact', async (req, res, next) => {
 
 router.post('/contact', async (req, res, next) => {
   try {
+    const contactPage = await getPage('contact');
+    if (!pageIsPublished(contactPage)) {
+      return renderNotPublished(res, 'Contact Not Published');
+    }
+
     const form = {
       full_name: cleanString(req.body.full_name),
       email: cleanString(req.body.email),
@@ -527,10 +566,9 @@ router.post('/contact', async (req, res, next) => {
     if (!form.message) errors.push('Message is required.');
 
     if (errors.length) {
-      const page = await getPublishedPage('contact');
       return res.status(422).render('public/contact', {
         title: 'Contact',
-        page,
+        page: contactPage,
         form,
         errors,
         helpers: renderHelpers

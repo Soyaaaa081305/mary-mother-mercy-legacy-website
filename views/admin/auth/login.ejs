@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="<%= csrfToken %>">
   <title><%= title %> | Mary Mother CMS</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -20,6 +21,7 @@
       <div class="alert alert-danger"><%= error %></div>
     <% } %>
     <form method="post" action="/admin/login">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <label>Email
         <input type="email" name="email" value="<%= form.email || '' %>" required autofocus>
       </label>
@@ -37,4 +39,3 @@
   </main>
 </body>
 </html>
-

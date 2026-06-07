@@ -49,6 +49,15 @@ DB_NAME=mary_mother_cms
 
 If your MySQL root user has a password, put it in `DB_PASSWORD`.
 
+Extra setup guides:
+
+```text
+docs/PAYMONGO_STEP_BY_STEP.md
+docs/GOOGLE_MAPS_STEP_BY_STEP.md
+docs/PRODUCTION_DEPLOYMENT_SECURITY.md
+docs/PUBLISHING_GUIDE.md
+```
+
 ## 5. Run the Database Scripts
 
 Run these scripts in this order.

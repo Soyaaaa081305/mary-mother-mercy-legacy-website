@@ -197,6 +197,23 @@ small,
   font-size: 1.08rem;
 }
 
+.hero p,
+.page-hero p,
+.reading-section,
+.prose,
+.split-section p,
+.support-preview p,
+.info-card p,
+.notice-box p,
+.support-layout p,
+.values-grid p,
+.contact-card p,
+.mini-list p,
+.video-card p {
+  text-align: justify;
+  text-align-last: left;
+}
+
 .hero-panel {
   border-radius: 8px;
   overflow: hidden;
@@ -453,7 +470,7 @@ small,
 }
 
 .page-hero {
-  text-align: center;
+  text-align: left;
 }
 
 .page-hero .btn {
@@ -600,11 +617,29 @@ small,
 
 .site-footer {
   display: grid;
-  grid-template-columns: minmax(260px, 1.1fr) minmax(180px, 0.55fr) minmax(260px, 0.9fr);
-  gap: 24px;
-  padding: 34px clamp(18px, 4vw, 60px);
+  grid-template-columns: minmax(280px, 1.1fr) minmax(190px, 0.55fr) minmax(320px, 0.95fr);
+  gap: clamp(24px, 4vw, 48px);
+  padding: 42px clamp(18px, 4vw, 60px);
   background: var(--ink);
   color: white;
+}
+
+.site-footer h2 {
+  margin: 0 0 14px;
+  color: white;
+  font-size: 1rem;
+}
+
+.site-footer strong {
+  display: block;
+  max-width: 520px;
+  line-height: 1.35;
+}
+
+.site-footer p {
+  max-width: 560px;
+  margin: 10px 0 0;
+  text-align: left;
 }
 
 .site-footer p,
@@ -614,12 +649,27 @@ small,
 
 .footer-links {
   display: grid;
-  gap: 12px;
+  align-content: start;
+  gap: 10px;
+}
+
+.footer-links a {
+  padding: 4px 0;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.footer-map {
+  min-width: 0;
 }
 
 .footer-map iframe {
   width: 100%;
-  min-height: 230px;
+  min-height: 245px;
   border: 0;
   border-radius: 8px;
 }

@@ -1,0 +1,38 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<form class="admin-panel form-grid" method="post" action="<%= action %>" enctype="multipart/form-data">
+  <label>Title
+    <input type="text" name="title" value="<%= entry.title || '' %>" required>
+  </label>
+  <label>Milestone Date
+    <input type="date" name="milestone_date" value="<%= entry.milestone_date ? helpers.dateInputValue(entry.milestone_date) : '' %>">
+  </label>
+  <label>Display Order
+    <input type="number" name="display_order" value="<%= entry.display_order || 0 %>" min="0">
+  </label>
+  <label>Status
+    <select name="status">
+      <option value="Published" <%= entry.status === 'Published' ? 'selected' : '' %>>Published</option>
+      <option value="Draft" <%= entry.status !== 'Published' ? 'selected' : '' %>>Draft</option>
+    </select>
+  </label>
+  <label class="full-span">Content
+    <textarea name="content" rows="10" required><%= entry.content || '' %></textarea>
+  </label>
+  <label class="full-span">Image
+    <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif">
+  </label>
+  <% if (entry.image_path) { %>
+    <div class="image-preview full-span">
+      <img src="<%= entry.image_path %>" alt="<%= entry.title %>">
+      <span>Current image</span>
+    </div>
+  <% } %>
+  <div class="form-actions">
+    <button class="btn primary" type="submit">Save Entry</button>
+    <a class="btn secondary" href="/admin/legacy">Cancel</a>
+  </div>
+</form>
+
+<%- include('../../partials/admin-footer') %>
+

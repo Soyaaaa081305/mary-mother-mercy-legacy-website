@@ -1,0 +1,26 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<form class="admin-panel form-grid" method="post" action="/admin/pages/<%= page.page_id %>">
+  <label>Page Name
+    <input type="text" value="<%= page.page_name %>" disabled>
+  </label>
+  <label>Title
+    <input type="text" name="title" value="<%= page.title %>" required>
+  </label>
+  <label>Status
+    <select name="status">
+      <option value="Published" <%= page.status === 'Published' ? 'selected' : '' %>>Published</option>
+      <option value="Draft" <%= page.status === 'Draft' ? 'selected' : '' %>>Draft</option>
+    </select>
+  </label>
+  <label class="full-span">Content
+    <textarea name="content" rows="12" required><%= page.content %></textarea>
+  </label>
+  <div class="form-actions">
+    <button class="btn primary" type="submit">Save Page</button>
+    <a class="btn secondary" href="/admin/pages">Cancel</a>
+  </div>
+</form>
+
+<%- include('../../partials/admin-footer') %>
+

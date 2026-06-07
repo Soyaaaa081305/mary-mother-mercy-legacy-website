@@ -1,0 +1,42 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Nurses and Caregivers Stories</h2>
+    <a class="btn primary" href="/admin/stories/new">Add Story</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Published</th>
+          <th>Status</th>
+          <th>Created By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% stories.forEach((story) => { %>
+          <tr>
+            <td><%= story.title %></td>
+            <td><%= story.author_name %> <small><%= story.author_role %></small></td>
+            <td><%= helpers.formatDate(story.published_at) %></td>
+            <td><span class="status <%= story.status.toLowerCase() %>"><%= story.status %></span></td>
+            <td><%= story.creator_name || 'System' %></td>
+            <td class="actions">
+              <a class="btn small secondary" href="/admin/stories/<%= story.story_id %>/edit">Edit</a>
+              <form method="post" action="/admin/stories/<%= story.story_id %>/delete" onsubmit="return confirm('Delete this caregiver story?');">
+                <button class="btn small danger" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../../partials/admin-footer') %>
+

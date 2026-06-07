@@ -1,0 +1,46 @@
+  </main>
+  <footer class="site-footer">
+    <div class="footer-about">
+      <strong>Mary Mother of Mercy Home For the Elderly And Abandoned Foundation</strong>
+      <p>Sharing organizational legacy, caregiver reflections, and support information with dignity and privacy.</p>
+      <% if (siteInfo.foundation_address) { %>
+        <p><strong>Address:</strong> <%= siteInfo.foundation_address %></p>
+      <% } %>
+      <% if (siteInfo.contact_number) { %>
+        <p><strong>Phone:</strong> <%= siteInfo.contact_number %></p>
+      <% } %>
+      <% if (siteInfo.foundation_email) { %>
+        <p><strong>Email:</strong> <%= siteInfo.foundation_email %></p>
+      <% } %>
+    </div>
+    <div class="footer-links">
+      <a href="/about">About</a>
+      <a href="/legacy">Legacy</a>
+      <a href="/caregiver-stories">Stories</a>
+      <a href="/events">Events</a>
+      <a href="/videos">Videos</a>
+      <a href="/support">Support</a>
+      <a href="/contact">Contact</a>
+      <% if (siteInfo.facebook_url) { %>
+        <a href="<%= siteInfo.facebook_url %>" target="_blank" rel="noopener">Facebook</a>
+      <% } %>
+      <% if (siteInfo.youtube_url) { %>
+        <a href="<%= siteInfo.youtube_url %>" target="_blank" rel="noopener">YouTube</a>
+      <% } %>
+    </div>
+    <div class="footer-map">
+      <% if (googleMapEmbedSrc) { %>
+        <iframe
+          title="Foundation location map"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="<%= googleMapEmbedSrc %>"
+          allowfullscreen></iframe>
+      <% } else { %>
+        <a class="map-link" href="<%= googleMapSearchUrl %>" target="_blank" rel="noopener">Open location in Google Maps</a>
+      <% } %>
+    </div>
+  </footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

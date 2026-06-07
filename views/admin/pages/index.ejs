@@ -1,0 +1,34 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Editable Website Pages</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th>Slug</th>
+          <th>Status</th>
+          <th>Updated</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pages.forEach((page) => { %>
+          <tr>
+            <td><%= page.page_name %></td>
+            <td>/<%= page.page_slug === 'home' ? '' : page.page_slug %></td>
+            <td><span class="status <%= page.status.toLowerCase() %>"><%= page.status %></span></td>
+            <td><%= helpers.formatDateTime(page.updated_at) %></td>
+            <td><a class="btn small secondary" href="/admin/pages/<%= page.page_id %>/edit">Edit</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../../partials/admin-footer') %>
+

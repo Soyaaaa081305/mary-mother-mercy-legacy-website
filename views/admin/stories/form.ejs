@@ -1,0 +1,44 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<form class="admin-panel form-grid" method="post" action="<%= action %>" enctype="multipart/form-data">
+  <div class="privacy-callout full-span">
+    Reminder: Do not include real resident names, private medical details, personal trauma, or identifiable information unless written consent is documented.
+  </div>
+  <label>Story Title
+    <input type="text" name="title" value="<%= story.title || '' %>" required>
+  </label>
+  <label>Author Name or Role
+    <input type="text" name="author_name" value="<%= story.author_name || '' %>" required>
+  </label>
+  <label>Author Position
+    <input type="text" name="author_role" value="<%= story.author_role || '' %>" placeholder="Nurse, Caregiver, Volunteer Coordinator" required>
+  </label>
+  <label>Date Posted
+    <input type="date" name="published_at" value="<%= story.published_at ? helpers.dateInputValue(story.published_at) : '' %>">
+  </label>
+  <label>Status
+    <select name="status">
+      <option value="Published" <%= story.status === 'Published' ? 'selected' : '' %>>Published</option>
+      <option value="Draft" <%= story.status !== 'Published' ? 'selected' : '' %>>Draft</option>
+    </select>
+  </label>
+  <label class="full-span">Story Content
+    <textarea name="content" rows="12" required><%= story.content || '' %></textarea>
+  </label>
+  <label class="full-span">Featured Image
+    <input type="file" name="featured_image" accept="image/jpeg,image/png,image/webp,image/gif">
+  </label>
+  <% if (story.featured_image_path) { %>
+    <div class="image-preview full-span">
+      <img src="<%= story.featured_image_path %>" alt="<%= story.title %>">
+      <span>Current image</span>
+    </div>
+  <% } %>
+  <div class="form-actions">
+    <button class="btn primary" type="submit">Save Story</button>
+    <a class="btn secondary" href="/admin/stories">Cancel</a>
+  </div>
+</form>
+
+<%- include('../../partials/admin-footer') %>
+

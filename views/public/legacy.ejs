@@ -1,0 +1,29 @@
+<%- include('../partials/public-header', { title }) %>
+
+<section class="page-hero">
+  <p class="eyebrow">Foundation Legacy</p>
+  <h1><%= page ? page.title : 'Our Legacy' %></h1>
+  <% if (page) { %>
+    <p><%= page.content %></p>
+  <% } %>
+</section>
+
+<section class="timeline">
+  <% entries.forEach((entry, index) => { %>
+    <article class="timeline-item">
+      <div class="timeline-year"><%= entry.milestone_date ? new Date(entry.milestone_date).getFullYear() : index + 1 %></div>
+      <div class="timeline-card">
+        <% if (entry.image_path) { %>
+          <img src="<%= entry.image_path %>" alt="<%= entry.title %>">
+        <% } %>
+        <p class="meta"><%= helpers.formatDate(entry.milestone_date) %></p>
+        <h2><%= entry.title %></h2>
+        <p><%= helpers.excerpt(entry.content, 220) %></p>
+        <a class="text-link" href="/legacy/<%= entry.legacy_id %>">Read more</a>
+      </div>
+    </article>
+  <% }) %>
+</section>
+
+<%- include('../partials/public-footer') %>
+

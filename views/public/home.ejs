@@ -1,0 +1,121 @@
+<%- include('../partials/public-header', { title }) %>
+
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">Legacy, care, and compassionate service</p>
+    <h1><%= homePage ? homePage.title : 'Mary Mother of Mercy Home' %></h1>
+    <p><%= homePage ? homePage.content : 'A dynamic legacy website and CMS for sharing the foundation mission and staff stories.' %></p>
+    <div class="hero-actions">
+      <a class="btn primary" href="/legacy">Learn Our Legacy</a>
+      <a class="btn secondary" href="/caregiver-stories">Read Caregiver Stories</a>
+      <a class="btn secondary" href="/support">Support the Foundation</a>
+      <a class="btn ghost" href="/contact">Contact Us</a>
+    </div>
+  </div>
+  <div class="hero-panel">
+    <img src="/images/placeholders/compassion-care.jpg" alt="Warm care setting at the foundation">
+  </div>
+</section>
+
+<section class="content-band">
+  <div class="section-heading">
+    <p class="eyebrow">Foundation Legacy</p>
+    <h2>Milestones of mercy and service</h2>
+  </div>
+  <div class="card-grid three">
+    <% legacyEntries.forEach((entry) => { %>
+      <article class="info-card">
+        <% if (entry.image_path) { %>
+          <img src="<%= entry.image_path %>" alt="<%= entry.title %>">
+        <% } %>
+        <p class="meta"><%= helpers.formatDate(entry.milestone_date) %></p>
+        <h3><%= entry.title %></h3>
+        <p><%= helpers.excerpt(entry.content, 140) %></p>
+        <a class="text-link" href="/legacy/<%= entry.legacy_id %>">Read milestone</a>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="split-section">
+  <div>
+    <p class="eyebrow">Caregiver Reflection</p>
+    <h2><%= featuredStory ? featuredStory.title : 'Stories from nurses and caregivers' %></h2>
+    <% if (featuredStory) { %>
+      <p class="meta"><%= featuredStory.author_name %>, <%= featuredStory.author_role %></p>
+      <p><%= helpers.excerpt(featuredStory.content, 260) %></p>
+      <a class="btn primary" href="/caregiver-stories/<%= featuredStory.story_id %>">Read Story</a>
+    <% } else { %>
+      <p>Staff reflections will appear here after they are published in the CMS.</p>
+    <% } %>
+  </div>
+  <div class="notice-box">
+    <h3>Privacy-safe storytelling</h3>
+    <p>Stories focus on service, teamwork, compassion, and staff lessons learned. The system avoids private resident names, health details, trauma, and identifiable personal information.</p>
+  </div>
+</section>
+
+<section class="content-band">
+  <div class="section-heading">
+    <p class="eyebrow">Gallery Preview</p>
+    <h2>Moments from the foundation community</h2>
+  </div>
+  <div class="gallery-grid">
+    <% galleryImages.forEach((image) => { %>
+      <figure>
+        <img src="<%= image.image_path %>" alt="<%= image.alt_text || image.title %>">
+        <figcaption><%= image.title %></figcaption>
+      </figure>
+    <% }) %>
+  </div>
+  <a class="btn secondary centered" href="/gallery">View Gallery</a>
+</section>
+
+<section class="split-section">
+  <div>
+    <p class="eyebrow">Events</p>
+    <h2>Participate with care and coordination</h2>
+    <p>Visitors, school groups, volunteers, and partner organizations can join published events after submitting a participation request.</p>
+    <a class="btn primary" href="/events">View Events</a>
+  </div>
+  <div class="mini-list">
+    <% events.forEach((event) => { %>
+      <article>
+        <p class="meta"><%= helpers.formatDateTime(event.event_date) %></p>
+        <h3><%= event.title %></h3>
+        <p><%= helpers.excerpt(event.description, 120) %></p>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="content-band">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Videos</p>
+      <h2>Watch foundation media</h2>
+    </div>
+    <a class="btn secondary" href="/videos">All Videos</a>
+  </div>
+  <% if (videos.length) { %>
+    <div class="video-card">
+      <iframe src="<%= videos[0].embed_url %>" title="<%= videos[0].title %>" allowfullscreen></iframe>
+      <div>
+        <h3><%= videos[0].title %></h3>
+        <p><%= videos[0].description || 'CMS-managed video link.' %></p>
+        <a class="text-link" href="<%= videos[0].video_url %>" target="_blank" rel="noopener">Watch on video platform</a>
+      </div>
+    </div>
+  <% } %>
+</section>
+
+<section class="support-preview">
+  <div>
+    <p class="eyebrow">Support Information</p>
+    <h2><%= supportInfo ? supportInfo.title : 'Support the Foundation' %></h2>
+    <p><%= supportInfo ? helpers.excerpt(supportInfo.content, 220) : 'Donation instructions and in-kind needs can be managed from the admin CMS.' %></p>
+  </div>
+  <a class="btn primary" href="/support">How to Support</a>
+</section>
+
+<%- include('../partials/public-footer') %>

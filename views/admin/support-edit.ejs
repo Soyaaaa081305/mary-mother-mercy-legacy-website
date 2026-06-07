@@ -1,0 +1,44 @@
+<%- include('../partials/admin-header', { title }) %>
+
+<form class="admin-panel form-grid" method="post" action="/admin/support">
+  <input type="hidden" name="support_id" value="<%= supportInfo.support_id || '' %>">
+  <label>Title
+    <input type="text" name="title" value="<%= supportInfo.title || '' %>" required>
+  </label>
+  <label>Contact Person
+    <input type="text" name="contact_person" value="<%= supportInfo.contact_person || '' %>">
+  </label>
+  <label>Contact Number
+    <input type="text" name="contact_number" value="<%= supportInfo.contact_number || '' %>">
+  </label>
+  <label>Foundation Email
+    <input type="email" name="foundation_email" value="<%= supportInfo.foundation_email || '' %>">
+  </label>
+  <label class="full-span">Foundation Address
+    <textarea name="foundation_address" rows="4"><%= supportInfo.foundation_address || '' %></textarea>
+  </label>
+  <label>Facebook URL
+    <input type="url" name="facebook_url" value="<%= supportInfo.facebook_url || '' %>">
+  </label>
+  <label>YouTube URL
+    <input type="url" name="youtube_url" value="<%= supportInfo.youtube_url || '' %>">
+  </label>
+  <label class="full-span">Google Maps Search Query
+    <input type="text" name="google_maps_query" value="<%= supportInfo.google_maps_query || '' %>" placeholder="Foundation name or exact address">
+    <small>Used by the footer/contact Google Maps Embed API iframe.</small>
+  </label>
+  <label class="full-span">Main Support Instructions
+    <textarea name="content" rows="8" required><%= supportInfo.content || '' %></textarea>
+  </label>
+  <label class="full-span">Bank Details or Support Channels
+    <textarea name="bank_details" rows="7"><%= supportInfo.bank_details || '' %></textarea>
+  </label>
+  <label class="full-span">Accepted In-kind Donations
+    <textarea name="in_kind_donations" rows="7"><%= supportInfo.in_kind_donations || '' %></textarea>
+  </label>
+  <div class="form-actions">
+    <button class="btn primary" type="submit">Save Support Info</button>
+  </div>
+</form>
+
+<%- include('../partials/admin-footer') %>

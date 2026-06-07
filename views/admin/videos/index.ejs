@@ -1,0 +1,42 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Website Videos</h2>
+    <a class="btn primary" href="/admin/videos/new">Add Video Link</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Order</th>
+          <th>Status</th>
+          <th>Video Link</th>
+          <th>Created By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% videos.forEach((video) => { %>
+          <tr>
+            <td><%= video.title %></td>
+            <td><%= video.display_order %></td>
+            <td><span class="status <%= video.status.toLowerCase() %>"><%= video.status %></span></td>
+            <td><a class="text-link" href="<%= video.video_url %>" target="_blank" rel="noopener">Open</a></td>
+            <td><%= video.creator_name || 'System' %></td>
+            <td class="actions">
+              <a class="btn small secondary" href="/admin/videos/<%= video.video_id %>/edit">Edit</a>
+              <form method="post" action="/admin/videos/<%= video.video_id %>/delete" onsubmit="return confirm('Delete this video link?');">
+                <button class="btn small danger" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../../partials/admin-footer') %>
+

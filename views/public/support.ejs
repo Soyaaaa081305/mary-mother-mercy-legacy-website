@@ -1,0 +1,68 @@
+<%- include('../partials/public-header', { title }) %>
+
+<section class="page-hero">
+  <p class="eyebrow">Support and Donation Information</p>
+  <h1><%= supportInfo ? supportInfo.title : 'Support the Foundation' %></h1>
+  <% if (page) { %>
+    <p><%= page.content %></p>
+  <% } %>
+</section>
+
+<section class="support-layout">
+  <article>
+    <h2>How people can help</h2>
+    <p><%- helpers.nl2br(supportInfo ? supportInfo.content : 'Support details are not yet available.') %></p>
+  </article>
+  <article>
+    <h2>Bank or support channels</h2>
+    <p><%- helpers.nl2br(supportInfo ? supportInfo.bank_details : 'Please contact the foundation office for verified details.') %></p>
+  </article>
+  <article>
+    <h2>Accepted in-kind donations</h2>
+    <p><%- helpers.nl2br(supportInfo ? supportInfo.in_kind_donations : 'Please contact staff before sending supplies.') %></p>
+  </article>
+  <article>
+    <h2>Contact person</h2>
+    <p><%= supportInfo ? supportInfo.contact_person : 'Foundation Office' %></p>
+    <p><%= supportInfo ? supportInfo.contact_number : 'To be updated' %></p>
+  </article>
+</section>
+
+<section class="contact-layout">
+  <form class="form-panel" method="post" action="/donate">
+    <p class="eyebrow">PayMongo Checkout</p>
+    <h2>Donate Online</h2>
+    <% if (donationErrors && donationErrors.length) { %>
+      <div class="alert alert-danger">
+        <% donationErrors.forEach((error) => { %>
+          <p><%= error %></p>
+        <% }) %>
+      </div>
+    <% } %>
+    <label>Donor Name
+      <input type="text" name="donor_name" value="<%= donationForm.donor_name || '' %>" required>
+    </label>
+    <label>Email
+      <input type="email" name="donor_email" value="<%= donationForm.donor_email || '' %>" required>
+    </label>
+    <label>Phone Number
+      <input type="text" name="donor_phone" value="<%= donationForm.donor_phone || '' %>">
+    </label>
+    <label>Amount in PHP
+      <input type="number" name="amount" min="20" step="1" value="<%= donationForm.amount || '500' %>" required>
+    </label>
+    <label>Message
+      <textarea name="message" rows="4"><%= donationForm.message || '' %></textarea>
+    </label>
+    <button class="btn primary" type="submit">Proceed to PayMongo</button>
+    <small>Payment is processed on PayMongo's hosted checkout page. Final paid status should be verified in the PayMongo dashboard or webhook logs.</small>
+  </form>
+
+  <aside class="notice-box">
+    <h2>Event Participation</h2>
+    <p>Visitors who want to join volunteer orientations, donation drives, and coordinated activities can submit a participation request through the Events page.</p>
+    <a class="btn secondary" href="/events">View Events</a>
+  </aside>
+</section>
+
+<%- include('../partials/public-footer') %>

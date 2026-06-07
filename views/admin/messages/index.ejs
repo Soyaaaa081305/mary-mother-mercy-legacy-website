@@ -1,0 +1,39 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Contact Messages</h2>
+    <div class="button-row">
+      <a class="btn small <%= !status ? 'primary' : 'secondary' %>" href="/admin/messages">All</a>
+      <a class="btn small <%= status === 'Unread' ? 'primary' : 'secondary' %>" href="/admin/messages?status=Unread">Unread</a>
+      <a class="btn small <%= status === 'Read' ? 'primary' : 'secondary' %>" href="/admin/messages?status=Read">Read</a>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Sender</th>
+          <th>Subject</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% messages.forEach((message) => { %>
+          <tr>
+            <td><%= message.full_name %><small><%= message.email %></small></td>
+            <td><%= message.subject %></td>
+            <td><span class="status <%= message.status.toLowerCase() %>"><%= message.status %></span></td>
+            <td><%= helpers.formatDateTime(message.created_at) %></td>
+            <td><a class="btn small secondary" href="/admin/messages/<%= message.message_id %>">Open</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../../partials/admin-footer') %>
+

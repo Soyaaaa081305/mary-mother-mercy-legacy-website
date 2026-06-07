@@ -1,0 +1,36 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<form class="admin-panel form-grid" method="post" action="<%= action %>">
+  <label>Full Name
+    <input type="text" name="full_name" value="<%= user.full_name || '' %>" required>
+  </label>
+  <label>Email
+    <input type="email" name="email" value="<%= user.email || '' %>" required>
+  </label>
+  <label>Password
+    <input type="password" name="password" <%= user.admin_id ? '' : 'required' %>>
+    <% if (user.admin_id) { %>
+      <small>Leave blank to keep current password.</small>
+    <% } %>
+  </label>
+  <label>Role
+    <select name="role">
+      <% ['Super Admin', 'Content Editor', 'Viewer'].forEach((role) => { %>
+        <option value="<%= role %>" <%= user.role === role ? 'selected' : '' %>><%= role %></option>
+      <% }) %>
+    </select>
+  </label>
+  <label>Status
+    <select name="status">
+      <option value="Active" <%= user.status !== 'Inactive' ? 'selected' : '' %>>Active</option>
+      <option value="Inactive" <%= user.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+    </select>
+  </label>
+  <div class="form-actions">
+    <button class="btn primary" type="submit">Save User</button>
+    <a class="btn secondary" href="/admin/users">Cancel</a>
+  </div>
+</form>
+
+<%- include('../../partials/admin-footer') %>
+

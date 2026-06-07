@@ -1,0 +1,45 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<form class="admin-panel form-grid" method="post" action="<%= action %>" enctype="multipart/form-data">
+  <label>Title
+    <input type="text" name="title" value="<%= image.title || '' %>" required>
+  </label>
+  <label>Category
+    <select name="category_id" required>
+      <option value="">Select category</option>
+      <% categories.forEach((category) => { %>
+        <option value="<%= category.category_id %>" <%= image.category_id === category.category_id ? 'selected' : '' %>>
+          <%= category.category_name %>
+        </option>
+      <% }) %>
+    </select>
+  </label>
+  <label>Status
+    <select name="status">
+      <option value="Published" <%= image.status !== 'Draft' ? 'selected' : '' %>>Published</option>
+      <option value="Draft" <%= image.status === 'Draft' ? 'selected' : '' %>>Draft</option>
+    </select>
+  </label>
+  <label class="full-span">Alt Text
+    <input type="text" name="alt_text" value="<%= image.alt_text || '' %>">
+  </label>
+  <label class="full-span">Caption
+    <textarea name="caption" rows="5"><%= image.caption || '' %></textarea>
+  </label>
+  <label class="full-span">Image
+    <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" <%= image.image_id ? '' : 'required' %>>
+  </label>
+  <% if (image.image_path) { %>
+    <div class="image-preview full-span">
+      <img src="<%= image.image_path %>" alt="<%= image.alt_text || image.title %>">
+      <span>Current image</span>
+    </div>
+  <% } %>
+  <div class="form-actions">
+    <button class="btn primary" type="submit">Save Image</button>
+    <a class="btn secondary" href="/admin/gallery">Cancel</a>
+  </div>
+</form>
+
+<%- include('../../partials/admin-footer') %>
+

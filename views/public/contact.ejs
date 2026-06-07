@@ -1,0 +1,54 @@
+<%- include('../partials/public-header', { title }) %>
+
+<section class="page-hero">
+  <p class="eyebrow">Contact Us</p>
+  <h1><%= page ? page.title : 'Contact the Foundation' %></h1>
+  <% if (page) { %>
+    <p><%= page.content %></p>
+  <% } %>
+</section>
+
+<section class="contact-layout">
+  <form class="form-panel" method="post" action="/contact">
+    <% if (errors && errors.length) { %>
+      <div class="alert alert-danger">
+        <% errors.forEach((error) => { %>
+          <p><%= error %></p>
+        <% }) %>
+      </div>
+    <% } %>
+    <label>Full Name
+      <input type="text" name="full_name" value="<%= form.full_name || '' %>" required>
+    </label>
+    <label>Email
+      <input type="email" name="email" value="<%= form.email || '' %>" required>
+    </label>
+    <label>Phone Number
+      <input type="text" name="phone_number" value="<%= form.phone_number || '' %>">
+    </label>
+    <label>Subject
+      <input type="text" name="subject" value="<%= form.subject || '' %>" required>
+    </label>
+    <label>Message
+      <textarea name="message" rows="7" required><%= form.message || '' %></textarea>
+    </label>
+    <button class="btn primary" type="submit">Send Message</button>
+  </form>
+
+  <aside class="contact-card">
+    <h2>Foundation Details</h2>
+    <p><strong>Address:</strong> <%= siteInfo.foundation_address || 'Replace with verified foundation address.' %></p>
+    <p><strong>Phone:</strong> <%= siteInfo.contact_number || '+63 900 000 0000' %></p>
+    <p><strong>Email:</strong> <%= siteInfo.foundation_email || 'info@marymother.local' %></p>
+    <% if (siteInfo.facebook_url) { %>
+      <p><strong>Social:</strong> <a href="<%= siteInfo.facebook_url %>" target="_blank" rel="noopener">Facebook</a></p>
+    <% } %>
+    <% if (googleMapEmbedSrc) { %>
+      <iframe class="map-iframe" title="Foundation location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="<%= googleMapEmbedSrc %>" allowfullscreen></iframe>
+    <% } else { %>
+      <a class="map-placeholder" href="<%= googleMapSearchUrl %>" target="_blank" rel="noopener">Open location in Google Maps</a>
+    <% } %>
+  </aside>
+</section>
+
+<%- include('../partials/public-footer') %>

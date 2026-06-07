@@ -1,0 +1,14 @@
+<%- include('../partials/public-header', { title }) %>
+
+<section class="page-hero">
+  <p class="eyebrow">Donation</p>
+  <h1><%= heading %></h1>
+  <p><%= message %></p>
+  <% if (reference) { %>
+    <p class="meta">Reference number: <%= reference %></p>
+  <% } %>
+  <a class="btn primary" href="/support">Return to Support</a>
+</section>
+
+<%- include('../partials/public-footer') %>
+

@@ -1,0 +1,32 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<form class="admin-panel form-grid" method="post" action="<%= action %>">
+  <div class="privacy-callout full-span">
+    Best publishing path: upload the approved video to YouTube or Vimeo, then paste the public video link here. The website will embed it and also provide an external watch link.
+  </div>
+  <label>Title
+    <input type="text" name="title" value="<%= video.title || '' %>" required>
+  </label>
+  <label>Video URL
+    <input type="url" name="video_url" value="<%= video.video_url || '' %>" placeholder="https://www.youtube.com/watch?v=..." required>
+  </label>
+  <label>Display Order
+    <input type="number" name="display_order" min="0" value="<%= video.display_order || 0 %>">
+  </label>
+  <label>Status
+    <select name="status">
+      <option value="Published" <%= video.status !== 'Draft' ? 'selected' : '' %>>Published</option>
+      <option value="Draft" <%= video.status === 'Draft' ? 'selected' : '' %>>Draft</option>
+    </select>
+  </label>
+  <label class="full-span">Description
+    <textarea name="description" rows="7"><%= video.description || '' %></textarea>
+  </label>
+  <div class="form-actions">
+    <button class="btn primary" type="submit">Save Video</button>
+    <a class="btn secondary" href="/admin/videos">Cancel</a>
+  </div>
+</form>
+
+<%- include('../../partials/admin-footer') %>
+

@@ -1,0 +1,27 @@
+<%- include('../partials/public-header', { title }) %>
+
+<section class="page-hero">
+  <p class="eyebrow">Foundation Videos</p>
+  <h1>Watch approved website videos</h1>
+  <p>Videos are managed as YouTube or Vimeo links in the CMS. This avoids heavy direct video uploads and keeps hosting easier for a published website.</p>
+</section>
+
+<section class="video-grid content-band">
+  <% videos.forEach((video) => { %>
+    <article class="video-card stacked">
+      <% if (video.embed_url) { %>
+        <iframe src="<%= video.embed_url %>" title="<%= video.title %>" allowfullscreen></iframe>
+      <% } %>
+      <div>
+        <h2><%= video.title %></h2>
+        <% if (video.description) { %>
+          <p><%= video.description %></p>
+        <% } %>
+        <a class="text-link" href="<%= video.video_url %>" target="_blank" rel="noopener">Watch on video platform</a>
+      </div>
+    </article>
+  <% }) %>
+</section>
+
+<%- include('../partials/public-footer') %>
+

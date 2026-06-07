@@ -1,0 +1,17 @@
+<%- include('../partials/public-header', { title }) %>
+
+<article class="detail-layout">
+  <% if (entry.image_path) { %>
+    <img class="detail-image" src="<%= entry.image_path %>" alt="<%= entry.title %>">
+  <% } %>
+  <p class="eyebrow">Foundation Milestone</p>
+  <h1><%= entry.title %></h1>
+  <p class="meta"><%= helpers.formatDate(entry.milestone_date) %></p>
+  <div class="prose">
+    <%- helpers.nl2br(entry.content) %>
+  </div>
+  <a class="btn secondary" href="/legacy">Back to Legacy</a>
+</article>
+
+<%- include('../partials/public-footer') %>
+

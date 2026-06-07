@@ -1,0 +1,20 @@
+<%- include('../partials/public-header', { title }) %>
+
+<article class="detail-layout">
+  <% if (story.featured_image_path) { %>
+    <img class="detail-image" src="<%= story.featured_image_path %>" alt="<%= story.title %>">
+  <% } %>
+  <p class="eyebrow">Caregiver Reflection</p>
+  <h1><%= story.title %></h1>
+  <p class="meta"><%= story.author_name %>, <%= story.author_role %> · <%= helpers.formatDate(story.published_at || story.created_at) %></p>
+  <div class="privacy-callout">
+    This story is written as a staff reflection and should not include real resident names, private medical details, trauma, or identifiable personal information.
+  </div>
+  <div class="prose">
+    <%- helpers.nl2br(story.content) %>
+  </div>
+  <a class="btn secondary" href="/caregiver-stories">Back to Stories</a>
+</article>
+
+<%- include('../partials/public-footer') %>
+

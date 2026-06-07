@@ -1,0 +1,57 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Donation Records</h2>
+    <small>PayMongo redirects are stored here. Confirm final payments in PayMongo or webhook logs.</small>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Donor</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Checkout</th>
+          <th>Date</th>
+          <th>Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% donations.forEach((donation) => { %>
+          <tr>
+            <td><%= donation.reference_number %></td>
+            <td>
+              <%= donation.donor_name %>
+              <small><%= donation.donor_email %></small>
+            </td>
+            <td>PHP <%= Number(donation.amount).toFixed(2) %></td>
+            <td><span class="status <%= donation.payment_status.toLowerCase() %>"><%= donation.payment_status %></span></td>
+            <td>
+              <% if (donation.paymongo_checkout_url) { %>
+                <a class="text-link" href="<%= donation.paymongo_checkout_url %>" target="_blank" rel="noopener">Open</a>
+              <% } else { %>
+                -
+              <% } %>
+            </td>
+            <td><%= helpers.formatDateTime(donation.created_at) %></td>
+            <td>
+              <form method="post" action="/admin/donations/<%= donation.donation_id %>/status">
+                <select name="payment_status">
+                  <% ['Pending', 'Redirected', 'Paid', 'Cancelled', 'Failed'].forEach((status) => { %>
+                    <option value="<%= status %>" <%= donation.payment_status === status ? 'selected' : '' %>><%= status %></option>
+                  <% }) %>
+                </select>
+                <button class="btn small secondary" type="submit">Save</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../../partials/admin-footer') %>
+

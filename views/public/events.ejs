@@ -1,0 +1,27 @@
+<%- include('../partials/public-header', { title }) %>
+
+<section class="page-hero">
+  <p class="eyebrow">Events and Participation</p>
+  <h1>Join coordinated foundation activities</h1>
+  <p>Submit participation requests for volunteer orientations, donation drives, and community support activities. Staff will review and coordinate details before confirming.</p>
+</section>
+
+<section class="card-grid three content-band">
+  <% events.forEach((event) => { %>
+    <article class="info-card">
+      <% if (event.image_path) { %>
+        <img src="<%= event.image_path %>" alt="<%= event.title %>">
+      <% } %>
+      <p class="meta"><%= helpers.formatDateTime(event.event_date) %></p>
+      <h2><%= event.title %></h2>
+      <% if (event.location) { %>
+        <p class="meta"><%= event.location %></p>
+      <% } %>
+      <p><%= helpers.excerpt(event.description, 170) %></p>
+      <a class="text-link" href="/events/<%= event.event_id %>">View event</a>
+    </article>
+  <% }) %>
+</section>
+
+<%- include('../partials/public-footer') %>
+

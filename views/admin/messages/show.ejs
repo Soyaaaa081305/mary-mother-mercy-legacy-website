@@ -1,0 +1,36 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<article class="admin-panel message-view">
+  <div class="panel-header">
+    <div>
+      <h2><%= message.subject %></h2>
+      <p class="meta">From <%= message.full_name %> · <%= helpers.formatDateTime(message.created_at) %></p>
+    </div>
+    <span class="status <%= message.status.toLowerCase() %>"><%= message.status %></span>
+  </div>
+
+  <div class="message-meta">
+    <p><strong>Email:</strong> <%= message.email %></p>
+    <p><strong>Phone:</strong> <%= message.phone_number || '-' %></p>
+  </div>
+
+  <div class="prose">
+    <%- helpers.nl2br(message.message) %>
+  </div>
+
+  <div class="form-actions">
+    <% if (currentUser.role !== 'Viewer') { %>
+      <form method="post" action="/admin/messages/<%= message.message_id %>/toggle">
+        <input type="hidden" name="status" value="<%= message.status === 'Read' ? 'Unread' : 'Read' %>">
+        <button class="btn secondary" type="submit">Mark <%= message.status === 'Read' ? 'Unread' : 'Read' %></button>
+      </form>
+      <form method="post" action="/admin/messages/<%= message.message_id %>/delete" onsubmit="return confirm('Delete this message?');">
+        <button class="btn danger" type="submit">Delete</button>
+      </form>
+    <% } %>
+    <a class="btn secondary" href="/admin/messages">Back to Messages</a>
+  </div>
+</article>
+
+<%- include('../../partials/admin-footer') %>
+

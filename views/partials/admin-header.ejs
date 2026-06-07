@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> | Admin CMS</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-body">
+  <div class="admin-layout">
+    <%- include('admin-sidebar') %>
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div>
+          <p class="eyebrow">Admin CMS</p>
+          <h1><%= title %></h1>
+        </div>
+        <div class="admin-user">
+          <span><%= currentUser.full_name %></span>
+          <small><%= currentUser.role %></small>
+        </div>
+      </header>
+      <%- include('flashes') %>
+

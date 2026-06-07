@@ -1,0 +1,42 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Legacy Entries</h2>
+    <a class="btn primary" href="/admin/legacy/new">Add Entry</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Date</th>
+          <th>Order</th>
+          <th>Status</th>
+          <th>Created By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% entries.forEach((entry) => { %>
+          <tr>
+            <td><%= entry.title %></td>
+            <td><%= helpers.formatDate(entry.milestone_date) %></td>
+            <td><%= entry.display_order %></td>
+            <td><span class="status <%= entry.status.toLowerCase() %>"><%= entry.status %></span></td>
+            <td><%= entry.creator_name || 'System' %></td>
+            <td class="actions">
+              <a class="btn small secondary" href="/admin/legacy/<%= entry.legacy_id %>/edit">Edit</a>
+              <form method="post" action="/admin/legacy/<%= entry.legacy_id %>/delete" onsubmit="return confirm('Delete this legacy entry?');">
+                <button class="btn small danger" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../../partials/admin-footer') %>
+

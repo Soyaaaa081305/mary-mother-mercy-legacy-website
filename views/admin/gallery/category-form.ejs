@@ -1,0 +1,17 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<form class="admin-panel form-grid" method="post" action="<%= action %>">
+  <label>Category Name
+    <input type="text" name="category_name" value="<%= category.category_name || '' %>" required>
+  </label>
+  <label class="full-span">Description
+    <textarea name="description" rows="6"><%= category.description || '' %></textarea>
+  </label>
+  <div class="form-actions">
+    <button class="btn primary" type="submit">Save Category</button>
+    <a class="btn secondary" href="/admin/gallery">Cancel</a>
+  </div>
+</form>
+
+<%- include('../../partials/admin-footer') %>
+

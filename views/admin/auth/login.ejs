@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> | Mary Mother CMS</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="login-body">
+  <main class="login-card">
+    <div class="brand-row">
+      <span class="brand-mark">MM</span>
+      <div>
+        <h1>Admin Login</h1>
+        <p>Mary Mother of Mercy Home CMS</p>
+      </div>
+    </div>
+    <%- include('../../partials/flashes') %>
+    <% if (typeof error !== 'undefined') { %>
+      <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    <form method="post" action="/admin/login">
+      <label>Email
+        <input type="email" name="email" value="<%= form.email || '' %>" required autofocus>
+      </label>
+      <label>Password
+        <input type="password" name="password" required>
+      </label>
+      <button class="btn primary full" type="submit">Login</button>
+    </form>
+    <div class="demo-accounts">
+      <strong>Sample accounts</strong>
+      <p>admin@marymother.local / admin123</p>
+      <p>editor@marymother.local / editor123</p>
+      <p>viewer@marymother.local / viewer123</p>
+    </div>
+  </main>
+</body>
+</html>
+

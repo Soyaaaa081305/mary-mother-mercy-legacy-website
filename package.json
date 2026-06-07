@@ -1,0 +1,32 @@
+{
+  "name": "mary-mother-legacy-cms",
+  "version": "1.0.0",
+  "description": "Mary Mother of Mercy Home legacy website and admin CMS for an academic IT124P project.",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node --watch app.js",
+    "start": "node app.js",
+    "check": "node scripts/check-syntax.js"
+  },
+  "keywords": [
+    "cms",
+    "express",
+    "mysql",
+    "academic-project"
+  ],
+  "author": "IT124P Project",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "method-override": "^3.0.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.12.0"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.33.5"
+  }
+}
+

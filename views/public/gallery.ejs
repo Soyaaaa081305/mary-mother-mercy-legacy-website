@@ -1,0 +1,31 @@
+<%- include('../partials/public-header', { title }) %>
+
+<section class="page-hero">
+  <p class="eyebrow">Photo Gallery</p>
+  <h1>Foundation activities and community support</h1>
+  <p>Photos are grouped by category and managed through the admin CMS.</p>
+</section>
+
+<section class="category-strip">
+  <% categories.forEach((category) => { %>
+    <span><%= category.category_name %> <small><%= category.image_count %></small></span>
+  <% }) %>
+</section>
+
+<section class="gallery-grid wide">
+  <% images.forEach((image) => { %>
+    <figure>
+      <img src="<%= image.image_path %>" alt="<%= image.alt_text || image.title %>">
+      <figcaption>
+        <strong><%= image.title %></strong>
+        <small><%= image.category_name %></small>
+        <% if (image.caption) { %>
+          <span><%= image.caption %></span>
+        <% } %>
+      </figcaption>
+    </figure>
+  <% }) %>
+</section>
+
+<%- include('../partials/public-footer') %>
+

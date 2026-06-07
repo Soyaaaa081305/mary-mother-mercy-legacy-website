@@ -1,0 +1,44 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Admin Users</h2>
+    <a class="btn primary" href="/admin/users/new">Add User</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% users.forEach((user) => { %>
+          <tr>
+            <td><%= user.full_name %></td>
+            <td><%= user.email %></td>
+            <td><%= user.role %></td>
+            <td><span class="status <%= user.status.toLowerCase() %>"><%= user.status %></span></td>
+            <td><%= helpers.formatDateTime(user.created_at) %></td>
+            <td class="actions">
+              <a class="btn small secondary" href="/admin/users/<%= user.admin_id %>/edit">Edit</a>
+              <% if (user.status === 'Active') { %>
+                <form method="post" action="/admin/users/<%= user.admin_id %>/deactivate" onsubmit="return confirm('Deactivate this user?');">
+                  <button class="btn small danger" type="submit">Deactivate</button>
+                </form>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../../partials/admin-footer') %>
+

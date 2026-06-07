@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> | Mary Mother of Mercy Home</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">
+      <span class="brand-mark">MM</span>
+      <span>
+        <strong>Mary Mother of Mercy Home</strong>
+        <small>Legacy Website</small>
+      </span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="site-nav" data-site-nav>
+      <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a>
+      <a href="/about" class="<%= currentPath.startsWith('/about') ? 'active' : '' %>">About</a>
+      <a href="/legacy" class="<%= currentPath.startsWith('/legacy') ? 'active' : '' %>">Legacy</a>
+      <a href="/caregiver-stories" class="<%= currentPath.startsWith('/caregiver-stories') ? 'active' : '' %>">Caregiver Stories</a>
+      <a href="/gallery" class="<%= currentPath.startsWith('/gallery') ? 'active' : '' %>">Gallery</a>
+      <a href="/events" class="<%= currentPath.startsWith('/events') ? 'active' : '' %>">Events</a>
+      <a href="/videos" class="<%= currentPath.startsWith('/videos') ? 'active' : '' %>">Videos</a>
+      <a href="/support" class="<%= currentPath.startsWith('/support') ? 'active' : '' %>">Support</a>
+      <a href="/contact" class="<%= currentPath.startsWith('/contact') ? 'active' : '' %>">Contact</a>
+      <a class="admin-link" href="/admin/login">Admin</a>
+    </nav>
+  </header>
+  <main>
+    <%- include('flashes') %>

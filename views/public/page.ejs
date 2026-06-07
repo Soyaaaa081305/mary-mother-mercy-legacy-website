@@ -1,0 +1,36 @@
+<%- include('../partials/public-header', { title }) %>
+
+<section class="page-hero">
+  <p class="eyebrow"><%= eyebrow %></p>
+  <h1><%= page ? page.title : title %></h1>
+</section>
+
+<section class="reading-section">
+  <% if (page) { %>
+    <p><%- helpers.nl2br(page.content) %></p>
+  <% } else { %>
+    <p>This page is not yet published in the CMS.</p>
+  <% } %>
+</section>
+
+<section class="values-grid">
+  <article>
+    <h2>Mission</h2>
+    <p>To provide compassionate care, shelter, and support while protecting dignity and privacy.</p>
+  </article>
+  <article>
+    <h2>Vision</h2>
+    <p>A community where vulnerable elderly persons are treated with mercy, respect, and steady care.</p>
+  </article>
+  <article>
+    <h2>Core Values</h2>
+    <p>Mercy, dignity, patience, faith, service, teamwork, and responsible stewardship.</p>
+  </article>
+  <article>
+    <h2>Services and Care</h2>
+    <p>Daily assistance, safe shelter, meals, spiritual encouragement, volunteer coordination, and support from community partners.</p>
+  </article>
+</section>
+
+<%- include('../partials/public-footer') %>
+

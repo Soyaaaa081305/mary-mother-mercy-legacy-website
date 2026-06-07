@@ -1,0 +1,76 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Gallery Categories</h2>
+    <a class="btn primary" href="/admin/gallery/categories/new">Add Category</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Images</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% categories.forEach((category) => { %>
+          <tr>
+            <td><%= category.category_name %></td>
+            <td><%= category.description || '-' %></td>
+            <td><%= category.image_count %></td>
+            <td class="actions">
+              <a class="btn small secondary" href="/admin/gallery/categories/<%= category.category_id %>/edit">Edit</a>
+              <form method="post" action="/admin/gallery/categories/<%= category.category_id %>/delete" onsubmit="return confirm('Delete this category?');">
+                <button class="btn small danger" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Gallery Images</h2>
+    <a class="btn primary" href="/admin/gallery/images/new">Upload Image</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Preview</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Uploaded By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% images.forEach((image) => { %>
+          <tr>
+            <td><img class="thumb" src="<%= image.image_path %>" alt="<%= image.alt_text || image.title %>"></td>
+            <td><%= image.title %></td>
+            <td><%= image.category_name %></td>
+            <td><span class="status <%= image.status.toLowerCase() %>"><%= image.status %></span></td>
+            <td><%= image.uploader_name || 'System' %></td>
+            <td class="actions">
+              <a class="btn small secondary" href="/admin/gallery/images/<%= image.image_id %>/edit">Edit</a>
+              <form method="post" action="/admin/gallery/images/<%= image.image_id %>/delete" onsubmit="return confirm('Delete this gallery image?');">
+                <button class="btn small danger" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../../partials/admin-footer') %>
+

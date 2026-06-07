@@ -1,0 +1,48 @@
+<%- include('../partials/admin-header', { title }) %>
+
+<section class="stats-grid">
+  <article><span><%= stats.legacy %></span><p>Legacy Posts</p></article>
+  <article><span><%= stats.stories %></span><p>Caregiver Stories</p></article>
+  <article><span><%= stats.images %></span><p>Gallery Images</p></article>
+  <article><span><%= stats.messages %></span><p>Contact Messages</p></article>
+  <article><span><%= stats.published %></span><p>Published Content</p></article>
+  <article><span><%= stats.pages %></span><p>CMS Pages</p></article>
+  <article><span><%= stats.donations %></span><p>Donation Records</p></article>
+  <article><span><%= stats.events %></span><p>Events</p></article>
+  <article><span><%= stats.videos %></span><p>Videos</p></article>
+</section>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Recent Updates</h2>
+    <% if (currentUser.role !== 'Viewer') { %>
+      <a class="btn secondary" href="/admin/activity">View All Logs</a>
+    <% } %>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Admin</th>
+          <th>Action</th>
+          <th>Table</th>
+          <th>Record</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% recentLogs.forEach((log) => { %>
+          <tr>
+            <td><%= helpers.formatDateTime(log.created_at) %></td>
+            <td><%= log.full_name || 'System' %></td>
+            <td><%= log.action %></td>
+            <td><%= log.table_affected %></td>
+            <td><%= log.record_id || '-' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../partials/admin-footer') %>

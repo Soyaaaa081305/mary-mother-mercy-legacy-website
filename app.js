@@ -5,11 +5,12 @@ const express = require('express');
 const session = require('express-session');
 const methodOverride = require('method-override');
 
-const { getOne } = require('./src/config/db');
+const { getOne, pool } = require('./src/config/db');
 const { csrfProtection } = require('./src/middleware/csrf');
 const publicRoutes = require('./src/routes/publicRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
+const { setupDatabase } = require('./src/utils/databaseSetup');
 
 const app = express();
 const PORT = Number(process.env.PORT || process.env.APP_PORT || 3000);
@@ -152,6 +153,17 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`Mary Mother CMS running at http://localhost:${PORT}`);
+async function start() {
+  if (process.env.AUTO_INIT_DB === 'true') {
+    await setupDatabase(pool, { initializeIfEmpty: true });
+  }
+
+  app.listen(PORT, HOST, () => {
+    console.log(`Mary Mother CMS running at http://localhost:${PORT}`);
+  });
+}
+
+start().catch((error) => {
+  console.error(error);
+  process.exit(1);
 });

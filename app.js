@@ -18,6 +18,17 @@ const isProduction = process.env.NODE_ENV === 'production';
 const paymongoSecretKey = process.env.PAYMONGO_SECRET_KEY || '';
 const paymongoWebhookMode = process.env.PAYMONGO_WEBHOOK_MODE === 'live' ? 'live' : 'test';
 const isPaymongoTestMode = !paymongoSecretKey.startsWith('sk_live_') || paymongoWebhookMode !== 'live';
+const fallbackMapQuery = process.env.FOUNDATION_MAP_QUERY ||
+  'Mary Mother of Mercy Home For the Elderly And Abandoned Foundation Philippines';
+
+function setMapLocals(res, mapQuery) {
+  const encodedMapQuery = encodeURIComponent(mapQuery || fallbackMapQuery);
+
+  res.locals.googleMapEmbedSrc = process.env.GOOGLE_MAPS_EMBED_API_KEY
+    ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(process.env.GOOGLE_MAPS_EMBED_API_KEY)}&q=${encodedMapQuery}`
+    : `https://www.google.com/maps?q=${encodedMapQuery}&output=embed`;
+  res.locals.googleMapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodedMapQuery}`;
+}
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -79,6 +90,8 @@ app.use((req, res, next) => {
   res.locals.flash = req.session.flash || null;
   res.locals.currentPath = req.path;
   res.locals.isPaymongoTestMode = isPaymongoTestMode;
+  res.locals.siteInfo = {};
+  setMapLocals(res, fallbackMapQuery);
   req.session.flash = null;
   next();
 });
@@ -102,15 +115,10 @@ app.use(async (req, res, next) => {
     );
     const mapQuery = siteInfo?.google_maps_query ||
       siteInfo?.foundation_address ||
-      process.env.FOUNDATION_MAP_QUERY ||
-      'Mary Mother of Mercy Home For the Elderly And Abandoned Foundation Philippines';
-    const encodedMapQuery = encodeURIComponent(mapQuery);
+      fallbackMapQuery;
 
     res.locals.siteInfo = siteInfo || {};
-    res.locals.googleMapEmbedSrc = process.env.GOOGLE_MAPS_EMBED_API_KEY
-      ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(process.env.GOOGLE_MAPS_EMBED_API_KEY)}&q=${encodedMapQuery}`
-      : `https://www.google.com/maps?q=${encodedMapQuery}&output=embed`;
-    res.locals.googleMapSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodedMapQuery}`;
+    setMapLocals(res, mapQuery);
     next();
   } catch (error) {
     next(error);

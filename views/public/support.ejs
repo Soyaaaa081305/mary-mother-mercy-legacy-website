@@ -21,11 +21,28 @@
       </article>
       <article>
         <h3>Contact Person</h3>
-        <p><strong><%= supportInfo ? supportInfo.contact_person : 'Foundation Office' %></strong></p>
-        <p><%= supportInfo ? supportInfo.contact_number : 'To be updated' %></p>
-        <% if (supportInfo && supportInfo.foundation_email) { %>
-          <p><%= supportInfo.foundation_email %></p>
-        <% } %>
+        <dl class="support-contact-list">
+          <div>
+            <dt>Name</dt>
+            <dd><%= supportInfo ? supportInfo.contact_person : 'Foundation Office' %></dd>
+          </div>
+          <div>
+            <dt>Mobile</dt>
+            <dd><%= supportInfo ? supportInfo.contact_number : 'To be updated' %></dd>
+          </div>
+          <% if (supportInfo && supportInfo.telephone_number) { %>
+            <div>
+              <dt>Telephone</dt>
+              <dd><%= supportInfo.telephone_number %></dd>
+            </div>
+          <% } %>
+          <% if (supportInfo && supportInfo.foundation_email) { %>
+            <div>
+              <dt>Email</dt>
+              <dd><%= supportInfo.foundation_email %></dd>
+            </div>
+          <% } %>
+        </dl>
       </article>
     </div>
   </div>

@@ -3,9 +3,7 @@ USE mary_mother_cms;
 INSERT INTO admin_users
   (full_name, email, password_hash, role, status)
 VALUES
-  ('System Administrator', 'admin@marymother.local', 'scrypt$16384$8$1$bac8e91173cef8796bb7db48149a92c7$c2ec98f3c4e11a46f5ac7d8b0bc6595c312370802cef9d519a1354a2e681e1c02526ce164206f937f4b1f8f7cb01048a7a91c1fce15372c34c3f2e37d76ddf39', 'Super Admin', 'Active'),
-  ('Content Editor', 'editor@marymother.local', 'scrypt$16384$8$1$249ca9f850e5a212fd269ea2a532f464$88b66b436bb2170a95d50ea1de92e0b025c83f1ab3c29ff3eee05baa9ab024b9d6400c4c06c5e6fa2d15aeea933f4bb973840396f95f9033c5b143af20bc1eae', 'Content Editor', 'Active'),
-  ('Dashboard Viewer', 'viewer@marymother.local', 'scrypt$16384$8$1$7b50094d688106bee2132b503e0d309a$1d07dc99a4fbc80639c3cdb55ad5eb243c3a8820751c37a968bff982f254045191b2f1f3b52d57cc2cdaff1de589f87921e0187e5dc8fe5ca244fb7f32e390d5', 'Viewer', 'Active');
+  ('System Administrator', 'admin@marymother.local', 'scrypt$16384$8$1$25d407bc6dd47ed6e5f2afa156beb610$08e654fb5948978d61f2a3b797e593ea0802ba45979b45b026cf411a7caab33320d8897ae12206e0ae8adf242eb62ffaae5361066256c9be2b85e19719319d91', 'Super Admin', 'Active');
 
 INSERT INTO pages
   (page_name, page_slug, hero_eyebrow, title, hero_summary, hero_image_path, content, status)
@@ -67,7 +65,7 @@ VALUES
    '2016-07-20', '/images/placeholders/community-support.jpg', 2, 'Published', 1),
   ('Continuing a Legacy of Compassion',
    'The foundation continues to strengthen its public presence, share its values, and invite responsible support while maintaining a privacy-safe approach to storytelling.',
-   '2024-03-10', '/images/placeholders/compassion-care.jpg', 3, 'Published', 2);
+   '2024-03-10', '/images/placeholders/compassion-care.jpg', 3, 'Published', 1);
 
 INSERT INTO caregiver_stories
   (title, author_name, author_role, content, featured_image_path, status, created_by, published_at)
@@ -75,11 +73,11 @@ VALUES
   ('A Day of Service and Compassion',
    'Nurse Maria', 'Nurse',
    'Each day begins with preparation, teamwork, and a quiet reminder that care is shown through small consistent actions. Serving in the foundation has taught me that compassion is not only a feeling. It is a practice of patience, listening, and respect. Our staff works together so daily routines feel calmer, safer, and more dignified for everyone in our care.',
-   '/images/placeholders/caregiver-service.jpg', 'Published', 2, '2026-01-10 09:00:00'),
+   '/images/placeholders/caregiver-service.jpg', 'Published', 1, '2026-01-10 09:00:00'),
   ('Lessons Learned from Caring with Patience',
    'Caregiver Staff', 'Caregiver',
    'Patience is one of the most important lessons I have learned in this work. Some days are busy and challenging, but steady care helps create trust. The foundation reminds us to serve with gentleness, to protect privacy, and to focus on dignity in every task.',
-   '/images/placeholders/patient-care.jpg', 'Published', 2, '2026-02-08 09:00:00'),
+   '/images/placeholders/patient-care.jpg', 'Published', 1, '2026-02-08 09:00:00'),
   ('Why Teamwork Matters in Elderly Care',
    'Volunteer Coordinator Ana', 'Volunteer Coordinator',
    'No one serves alone. Nurses, caregivers, volunteers, donors, and administrators all contribute to the daily rhythm of the home. Teamwork allows us to respond with organization and kindness while keeping the needs of the foundation at the center.',
@@ -100,12 +98,12 @@ INSERT INTO gallery_images
 VALUES
   (1, 'Welcoming Facility Area', 'A respectful view of the foundation environment.', '/images/placeholders/facility-1.jpg', 'Clean welcoming facility space', 1, 'Published'),
   (1, 'Care Preparation Area', 'Organized spaces help staff prepare for daily routines.', '/images/placeholders/facility-2.jpg', 'Organized care preparation area', 1, 'Published'),
-  (2, 'Community Program', 'A foundation program supported by staff and volunteers.', '/images/placeholders/event-1.jpg', 'Community program setup', 2, 'Published'),
-  (3, 'Outreach Coordination', 'Staff and partners prepare outreach support.', '/images/placeholders/outreach-1.jpg', 'Outreach supplies organized on tables', 2, 'Published'),
-  (4, 'Volunteer Service', 'Volunteers help with safe and respectful foundation activities.', '/images/placeholders/volunteers-1.jpg', 'Volunteers arranging support supplies', 2, 'Published'),
+  (2, 'Community Program', 'A foundation program supported by staff and volunteers.', '/images/placeholders/event-1.jpg', 'Community program setup', 1, 'Published'),
+  (3, 'Outreach Coordination', 'Staff and partners prepare outreach support.', '/images/placeholders/outreach-1.jpg', 'Outreach supplies organized on tables', 1, 'Published'),
+  (4, 'Volunteer Service', 'Volunteers help with safe and respectful foundation activities.', '/images/placeholders/volunteers-1.jpg', 'Volunteers arranging support supplies', 1, 'Published'),
   (5, 'Staff Teamwork', 'Care work is strengthened through communication and teamwork.', '/images/placeholders/staff-1.jpg', 'Staff teamwork meeting', 1, 'Published'),
   (6, 'Donation Supplies', 'In-kind support helps the foundation continue serving.', '/images/placeholders/donations-1.jpg', 'Donation supplies sorted carefully', 1, 'Published'),
-  (6, 'Support Packages', 'Support packages prepared for foundation use.', '/images/placeholders/donations-2.jpg', 'Support packages ready for delivery', 2, 'Published');
+  (6, 'Support Packages', 'Support packages prepared for foundation use.', '/images/placeholders/donations-2.jpg', 'Support packages ready for delivery', 1, 'Published');
 
 INSERT INTO support_information
   (title, content, bank_details, in_kind_donations, contact_person, contact_number, telephone_number, gmail_address, foundation_address, foundation_email, facebook_url, youtube_url, google_maps_query, updated_by)
@@ -127,7 +125,7 @@ INSERT INTO contact_team_members
 VALUES
   ('Foundation Office', 'General Inquiries', 'info@marymother.local', '+63 900 000 0000', '/images/placeholders/team-office.jpg', 1, 'Published', 1),
   ('Donation Coordinator', 'Support and Donations', 'donations@marymother.local', '+63 900 111 2222', '/images/placeholders/team-donations.jpg', 2, 'Published', 1),
-  ('Volunteer Coordinator', 'Events and Participation', 'volunteer@marymother.local', '+63 900 333 4444', '/images/placeholders/team-volunteer.jpg', 3, 'Published', 2);
+  ('Volunteer Coordinator', 'Events and Participation', 'volunteer@marymother.local', '+63 900 333 4444', '/images/placeholders/team-volunteer.jpg', 3, 'Published', 1);
 
 INSERT INTO donation_records
   (donor_name, donor_email, donor_phone, amount, message, reference_number, payment_status)
@@ -142,7 +140,7 @@ VALUES
    '2026-07-20 09:00:00', 'Foundation activity area', '/images/placeholders/event-1.jpg', 'Published', 1),
   ('Community Donation Drive',
    'A coordinated event for receiving pre-approved in-kind donations such as hygiene kits, cleaning supplies, and food support. Donors are encouraged to contact staff before participating.',
-   '2026-08-12 10:00:00', 'Foundation receiving area', '/images/placeholders/donations-1.jpg', 'Published', 2);
+   '2026-08-12 10:00:00', 'Foundation receiving area', '/images/placeholders/donations-1.jpg', 'Published', 1);
 
 INSERT INTO event_participations
   (event_id, full_name, email, phone_number, organization, message, status)

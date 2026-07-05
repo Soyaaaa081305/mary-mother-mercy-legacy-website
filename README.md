@@ -162,11 +162,9 @@ Your private `.env` is ignored by Git and excluded from the project ZIP.
 
 ## Admin Accounts
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Super Admin | `admin@marymother.local` | `admin123` |
-| Content Editor | `editor@marymother.local` | `editor123` |
-| Viewer | `viewer@marymother.local` | `viewer123` |
+| Role | Email |
+| --- | --- |
+| Super Admin | `admin@marymother.local` |
 
 If `ADMIN_OTP_ENABLED=true`, the app sends a 6-digit login code after the password step. The OTP screen includes a **Trust this device for 12 hours** checkbox. When checked after a successful OTP, the browser receives a secure trusted-device cookie, and the next password login from that browser skips OTP until the cookie expires. For local testing, `ADMIN_OTP_TEST_RECIPIENT` can send all OTP codes to one real inbox while sample admin emails remain unchanged.
 

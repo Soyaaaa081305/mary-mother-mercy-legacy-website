@@ -140,10 +140,6 @@ small,
   color: var(--sage-dark);
 }
 
-.admin-link {
-  border: 1px solid var(--border);
-}
-
 .nav-toggle {
   display: none;
   width: 44px;

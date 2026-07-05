@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node --watch app.js",
     "start": "node app.js",
-    "check": "node scripts/check-syntax.js"
+    "check": "node scripts/check-syntax.js",
+    "db:setup": "node scripts/setup-production-db.js"
   },
   "keywords": [
     "cms",

@@ -949,106 +949,20 @@ small,
   margin: 0 auto;
 }
 
-.org-structure {
-  display: grid;
-  gap: 18px;
-  padding: 22px;
+.org-photo-frame {
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.92)),
-    var(--surface);
+  background: var(--surface);
   box-shadow: var(--shadow);
 }
 
-.org-level {
-  position: relative;
-  display: grid;
-  gap: 14px;
-  justify-items: center;
-}
-
-.org-level + .org-level::before {
-  content: "";
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  width: 1px;
-  height: 18px;
-  background: var(--border-strong);
-}
-
-.org-level-single {
-  grid-template-columns: minmax(220px, 360px);
-  justify-content: center;
-}
-
-.org-level-director {
-  grid-template-columns: minmax(260px, 440px);
-  justify-content: center;
-}
-
-.org-level-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-items: stretch;
-}
-
-.org-node {
-  display: grid;
-  grid-template-columns: 68px minmax(0, 1fr);
-  gap: 12px;
-  align-items: center;
+.org-photo-frame img {
+  display: block;
   width: 100%;
-  min-height: 112px;
-  padding: 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #fffdf9;
-}
-
-.org-node-lead {
-  min-height: 118px;
-  border-color: rgba(40, 91, 64, 0.38);
-  background: #f6f4ec;
-}
-
-.org-node-text {
-  display: flex;
-  justify-content: center;
-  min-height: 64px;
-  text-align: center;
-  font-weight: 800;
-  color: var(--forest);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.org-node img {
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
+  height: clamp(320px, 54vw, 620px);
   object-fit: cover;
   object-position: center;
-  border: 2px solid var(--linen);
-  background: var(--linen);
-}
-
-.org-node h3,
-.org-node p {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.org-node h3 {
-  font-size: 0.98rem;
-  line-height: 1.25;
-}
-
-.org-node p {
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.35;
 }
 
 .alert {
@@ -1572,7 +1486,6 @@ td small {
   .support-info-grid,
   .video-grid,
   .team-grid,
-  .org-level-grid,
   .site-footer {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1632,18 +1545,9 @@ td small {
   .support-layout,
   .support-info-grid,
   .team-grid,
-  .org-level-grid,
   .form-grid,
   .message-meta {
     grid-template-columns: 1fr;
-  }
-
-  .org-structure {
-    padding: 16px;
-  }
-
-  .org-node {
-    min-height: 0;
   }
 
   .participation-callout {

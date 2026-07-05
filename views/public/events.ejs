@@ -13,6 +13,9 @@
       <% if (event.location) { %>
         <p class="meta"><%= event.location %></p>
       <% } %>
+      <p class="event-status <%= event.participationOpen ? 'open' : 'closed' %>">
+        <%= event.participationOpen ? 'Open for participation' : 'Event finished' %>
+      </p>
       <p><%= helpers.excerpt(event.description, 170) %></p>
       <a class="text-link" href="/events/<%= event.event_id %>">View event</a>
     </article>

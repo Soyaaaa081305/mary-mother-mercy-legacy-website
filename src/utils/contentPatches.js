@@ -19,6 +19,38 @@ async function applyContentPatches(pool) {
       console.log('Applied content patch: enforced the single admin account.');
     }
 
+    const [aboutPageResult] = await connection.query(
+      `UPDATE pages
+       SET page_name = 'About & Contact Page',
+           hero_eyebrow = CASE
+             WHEN hero_eyebrow IN ('About the foundation', 'About the Foundation') THEN 'About and official contacts'
+             ELSE hero_eyebrow
+           END,
+           title = CASE
+             WHEN title IN ('A Haven of Love, Prayer, and Daily Care', 'About the Foundation', 'About and Contact Mary Mother of Mercy Home') THEN 'About & Contact'
+             ELSE title
+           END,
+           hero_summary = CASE
+             WHEN hero_summary IN (
+               'Learn about the home, the sisters and staff who serve, and the values that guide its care for abandoned elderly women.',
+               'Learn about the foundation background, mission, vision, values, and service approach.'
+             ) THEN 'Learn about the home, the sisters and staff who serve, and the official channels for visits, donations, volunteer coordination, and messages.'
+             ELSE hero_summary
+           END
+       WHERE page_slug = 'about'`
+    );
+
+    const [contactPageResult] = await connection.query(
+      `UPDATE pages
+       SET page_name = 'Contact Page (merged into About & Contact)',
+           status = 'Draft'
+       WHERE page_slug = 'contact'`
+    );
+
+    if (aboutPageResult.affectedRows || contactPageResult.affectedRows) {
+      console.log('Applied content patch: merged About and Contact public pages.');
+    }
+
     const [result] = await connection.query(
       `UPDATE gallery_images
        SET title = 'Courtyard View',

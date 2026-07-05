@@ -189,7 +189,7 @@ GET  /donation/success
 GET  /donation/cancel
 POST /webhooks/paymongo
 POST /webhook_paymongo.php
-GET  /contact
+GET  /contact                redirects to /about#contact
 POST /contact
 ```
 
@@ -625,7 +625,7 @@ http://localhost:3000/gallery
 http://localhost:3000/videos
 http://localhost:3000/events
 http://localhost:3000/support
-http://localhost:3000/contact
+http://localhost:3000/about#contact
 http://localhost:3000/admin/login
 http://localhost:3000/health
 ```
@@ -638,7 +638,7 @@ Admin checks:
 - Pages editor live preview works.
 - Contact Team editor live preview works.
 - Support page PayMongo button is centered.
-- Contact page shows official contact information and team cards.
+- About & Contact page shows official contact information, team cards, organization chart, and the message form.
 - Gallery upload accepts images and rejects non-images.
 - Event participation form saves requests.
 - PayMongo checkout redirects.

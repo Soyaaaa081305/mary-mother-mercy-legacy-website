@@ -2,7 +2,28 @@
 
 <%- include('../partials/page-hero', { hero }) %>
 
-<section class="contact-overview">
+<section class="reading-section about-copy">
+  <% String(page.content || '').split(/\n{2,}/).forEach((paragraph) => { %>
+    <% if (paragraph.trim()) { %>
+      <p><%- helpers.nl2br(paragraph.trim()) %></p>
+    <% } %>
+  <% }) %>
+</section>
+
+<section class="values-grid about-values">
+  <article>
+    <p class="eyebrow">Mission</p>
+    <h2>Providing shelter, care, and compassion</h2>
+    <p>To provide a safe, caring, and nurturing environment for abandoned elderly women, offering them shelter, daily support, prayer, companionship, and the dignity of being treated as family.</p>
+  </article>
+  <article>
+    <p class="eyebrow">Vision</p>
+    <h2>A home where every elder is valued</h2>
+    <p>To be a place of mercy where elderly women who have been forgotten or left behind can experience love, respect, spiritual care, and a peaceful community in their later years.</p>
+  </article>
+</section>
+
+<section id="contact" class="contact-overview">
   <article class="contact-card official-contact">
     <p class="eyebrow">Official Contact Channels</p>
     <h2>Reach the foundation office</h2>
@@ -73,8 +94,9 @@
   </div>
 </section>
 
-<section class="contact-layout">
-  <form class="form-panel" method="post" action="/contact">
+<section id="contact-form" class="contact-layout">
+  <form class="form-panel" method="post" action="/contact#contact-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <% if (errors && errors.length) { %>
       <div class="alert alert-danger">
         <% errors.forEach((error) => { %>

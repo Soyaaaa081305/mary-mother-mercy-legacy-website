@@ -39,6 +39,63 @@ function renderNotPublished(res, title = 'Page Not Published') {
   return res.status(404).render('public/not-published', { title });
 }
 
+function eventAcceptsParticipation(event) {
+  const eventDate = event?.event_date ? new Date(event.event_date) : null;
+  return eventDate instanceof Date && !Number.isNaN(eventDate.getTime()) && eventDate.getTime() > Date.now();
+}
+
+function eventTime(event) {
+  const eventDate = event?.event_date ? new Date(event.event_date) : null;
+  return eventDate instanceof Date && !Number.isNaN(eventDate.getTime()) ? eventDate.getTime() : 0;
+}
+
+function eventWithParticipationState(event) {
+  return {
+    ...event,
+    participationOpen: eventAcceptsParticipation(event)
+  };
+}
+
+function sortEventsForDisplay(events) {
+  return events
+    .map(eventWithParticipationState)
+    .sort((a, b) => {
+      if (a.participationOpen !== b.participationOpen) {
+        return a.participationOpen ? -1 : 1;
+      }
+
+      return a.participationOpen ? eventTime(a) - eventTime(b) : eventTime(b) - eventTime(a);
+    });
+}
+
+function aboutContactHero(page) {
+  return pageHero(page, {
+    eyebrow: 'About and official contacts',
+    title: 'About & Contact'
+  });
+}
+
+async function getContactTeamMembers() {
+  return query(
+    `SELECT * FROM contact_team_members
+     WHERE status = 'Published'
+     ORDER BY display_order ASC, created_at ASC`
+  );
+}
+
+async function renderAboutContact(res, page, options = {}) {
+  const teamMembers = await getContactTeamMembers();
+  return res.status(options.status || 200).render('public/about-contact', {
+    title: 'About & Contact',
+    page,
+    hero: aboutContactHero(page),
+    teamMembers,
+    form: options.form || {},
+    errors: options.errors || [],
+    helpers: renderHelpers
+  });
+}
+
 router.get('/', async (req, res, next) => {
   try {
     const [homePage, legacyEntries, featuredStory, galleryImages, events, videos, supportInfo] = await Promise.all([
@@ -92,7 +149,7 @@ router.get('/', async (req, res, next) => {
       legacyEntries,
       featuredStory,
       galleryImages,
-      events,
+      events: sortEventsForDisplay(events).filter((event) => event.participationOpen).slice(0, 2),
       videos,
       supportInfo,
       hero: pageHero(homePage, {
@@ -114,12 +171,7 @@ router.get('/about', async (req, res, next) => {
     if (!pageIsPublished(page)) {
       return renderNotPublished(res, 'About Not Published');
     }
-    return res.render('public/page', {
-      title: 'About',
-      page,
-      hero: pageHero(page, { eyebrow: 'About the Foundation', title: 'About the Foundation' }),
-      helpers: renderHelpers
-    });
+    return renderAboutContact(res, page);
   } catch (error) {
     next(error);
   }
@@ -481,7 +533,7 @@ router.get('/events', async (req, res, next) => {
     return res.render('public/events', {
       title: 'Events',
       page,
-      events,
+      events: sortEventsForDisplay(events),
       hero: pageHero(page, { eyebrow: 'Events and Participation', title: 'Join Coordinated Foundation Activities' }),
       helpers: renderHelpers
     });
@@ -504,6 +556,7 @@ router.get('/events/:id', async (req, res, next) => {
     return res.render('public/event-detail', {
       title: event.title,
       event,
+      participationOpen: eventAcceptsParticipation(event),
       form: {},
       errors: [],
       helpers: renderHelpers
@@ -524,6 +577,11 @@ router.post('/events/:id/participate', async (req, res, next) => {
 
     if (!event) return res.status(404).render('public/404', { title: 'Event Not Found' });
 
+    if (!eventAcceptsParticipation(event)) {
+      setFlash(req, 'warning', 'This event is already finished, so participation requests are closed.');
+      return res.redirect(`/events/${event.event_id}`);
+    }
+
     const form = {
       event_id: event.event_id,
       full_name: cleanString(req.body.full_name),
@@ -541,6 +599,7 @@ router.post('/events/:id/participate', async (req, res, next) => {
       return res.status(422).render('public/event-detail', {
         title: event.title,
         event,
+        participationOpen: true,
         form,
         errors,
         helpers: renderHelpers
@@ -589,36 +648,15 @@ router.get('/videos', async (req, res, next) => {
   }
 });
 
-router.get('/contact', async (req, res, next) => {
-  try {
-    const page = await getPage('contact');
-    if (!pageIsPublished(page)) {
-      return renderNotPublished(res, 'Contact Not Published');
-    }
-    const teamMembers = await query(
-      `SELECT * FROM contact_team_members
-       WHERE status = 'Published'
-       ORDER BY display_order ASC, created_at ASC`
-    );
-    return res.render('public/contact', {
-      title: 'Contact',
-      page,
-      hero: pageHero(page, { eyebrow: 'Official Contacts', title: 'Contact Mary Mother of Mercy Home' }),
-      teamMembers,
-      form: {},
-      errors: [],
-      helpers: renderHelpers
-    });
-  } catch (error) {
-    next(error);
-  }
+router.get('/contact', (req, res) => {
+  return res.redirect(302, '/about#contact');
 });
 
 router.post('/contact', async (req, res, next) => {
   try {
-    const contactPage = await getPage('contact');
-    if (!pageIsPublished(contactPage)) {
-      return renderNotPublished(res, 'Contact Not Published');
+    const aboutPage = await getPage('about');
+    if (!pageIsPublished(aboutPage)) {
+      return renderNotPublished(res, 'About Not Published');
     }
 
     const form = {
@@ -636,18 +674,10 @@ router.post('/contact', async (req, res, next) => {
     if (!form.message) errors.push('Message is required.');
 
     if (errors.length) {
-      return res.status(422).render('public/contact', {
-        title: 'Contact',
-        page: contactPage,
-        hero: pageHero(contactPage, { eyebrow: 'Official Contacts', title: 'Contact Mary Mother of Mercy Home' }),
-        teamMembers: await query(
-          `SELECT * FROM contact_team_members
-           WHERE status = 'Published'
-           ORDER BY display_order ASC, created_at ASC`
-        ),
+      return renderAboutContact(res, aboutPage, {
+        status: 422,
         form,
-        errors,
-        helpers: renderHelpers
+        errors
       });
     }
 
@@ -660,7 +690,7 @@ router.post('/contact', async (req, res, next) => {
     );
 
     setFlash(req, 'success', 'Your message was sent successfully. Thank you for reaching out.');
-    return res.redirect('/contact');
+    return res.redirect('/about#contact-form');
   } catch (error) {
     return next(error);
   }

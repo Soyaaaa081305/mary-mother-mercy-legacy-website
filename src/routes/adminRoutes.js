@@ -42,7 +42,8 @@ router.get('/dashboard', authorize(...allRoles), async (req, res, next) => {
         `SELECT
           SUM(CASE WHEN status = 'Published' THEN 1 ELSE 0 END) AS published_pages,
           COUNT(*) AS total_pages
-         FROM pages`
+         FROM pages
+         WHERE page_slug <> 'contact'`
       ),
       getOne(`SELECT COUNT(*) AS total FROM donation_records`),
       getOne(`SELECT COUNT(*) AS total FROM events`),
@@ -58,7 +59,7 @@ router.get('/dashboard', authorize(...allRoles), async (req, res, next) => {
 
     const publishedContent = await getOne(
       `SELECT
-        (SELECT COUNT(*) FROM pages WHERE status = 'Published') +
+        (SELECT COUNT(*) FROM pages WHERE status = 'Published' AND page_slug <> 'contact') +
         (SELECT COUNT(*) FROM legacy_entries WHERE status = 'Published') +
         (SELECT COUNT(*) FROM caregiver_stories WHERE status = 'Published') +
         (SELECT COUNT(*) FROM gallery_images WHERE status = 'Published') +
@@ -89,7 +90,11 @@ router.get('/dashboard', authorize(...allRoles), async (req, res, next) => {
 
 router.get('/pages', authorize(...editorRoles), async (req, res, next) => {
   try {
-    const pages = await query(`SELECT * FROM pages ORDER BY page_name ASC`);
+    const pages = await query(
+      `SELECT * FROM pages
+       WHERE page_slug <> 'contact'
+       ORDER BY page_name ASC`
+    );
     res.render('admin/pages/index', { title: 'Manage Pages', pages, helpers });
   } catch (error) {
     next(error);
@@ -101,6 +106,10 @@ router.get('/pages/:id/edit', authorize(...editorRoles), async (req, res, next) 
     const page = await getOne(`SELECT * FROM pages WHERE page_id = :id`, { id: req.params.id });
     if (!page) {
       setFlash(req, 'warning', 'Page not found.');
+      return res.redirect('/admin/pages');
+    }
+    if (page.page_slug === 'contact') {
+      setFlash(req, 'warning', 'Contact details are managed through About & Contact, Support Info, Contact Team, and Messages.');
       return res.redirect('/admin/pages');
     }
     return res.render('admin/pages/edit', { title: `Edit ${page.page_name}`, page });
@@ -119,6 +128,10 @@ router.post(
       const existing = await getOne(`SELECT * FROM pages WHERE page_id = :id`, { id: req.params.id });
       if (!existing) {
         setFlash(req, 'warning', 'Page not found.');
+        return res.redirect('/admin/pages');
+      }
+      if (existing.page_slug === 'contact') {
+        setFlash(req, 'warning', 'Contact details are managed through About & Contact, Support Info, Contact Team, and Messages.');
         return res.redirect('/admin/pages');
       }
 

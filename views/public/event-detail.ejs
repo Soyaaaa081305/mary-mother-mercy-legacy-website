@@ -13,32 +13,41 @@
 </article>
 
 <section class="contact-layout">
-  <form class="form-panel" method="post" action="/events/<%= event.event_id %>/participate">
-    <h2>Participation Request</h2>
-    <% if (errors && errors.length) { %>
-      <div class="alert alert-danger">
-        <% errors.forEach((error) => { %>
-          <p><%= error %></p>
-        <% }) %>
-      </div>
-    <% } %>
-    <label>Full Name
-      <input type="text" name="full_name" value="<%= form.full_name || '' %>" required>
-    </label>
-    <label>Email
-      <input type="email" name="email" value="<%= form.email || '' %>" required>
-    </label>
-    <label>Phone Number
-      <input type="text" name="phone_number" value="<%= form.phone_number || '' %>">
-    </label>
-    <label>Organization
-      <input type="text" name="organization" value="<%= form.organization || '' %>">
-    </label>
-    <label>Message
-      <textarea name="message" rows="5"><%= form.message || '' %></textarea>
-    </label>
-    <button class="btn primary" type="submit">Submit Request</button>
-  </form>
+  <% if (participationOpen) { %>
+    <form class="form-panel" method="post" action="/events/<%= event.event_id %>/participate">
+      <h2>Participation Request</h2>
+      <% if (errors && errors.length) { %>
+        <div class="alert alert-danger">
+          <% errors.forEach((error) => { %>
+            <p><%= error %></p>
+          <% }) %>
+        </div>
+      <% } %>
+      <label>Full Name
+        <input type="text" name="full_name" value="<%= form.full_name || '' %>" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" value="<%= form.email || '' %>" required>
+      </label>
+      <label>Phone Number
+        <input type="text" name="phone_number" value="<%= form.phone_number || '' %>">
+      </label>
+      <label>Organization
+        <input type="text" name="organization" value="<%= form.organization || '' %>">
+      </label>
+      <label>Message
+        <textarea name="message" rows="5"><%= form.message || '' %></textarea>
+      </label>
+      <button class="btn primary" type="submit">Submit Request</button>
+    </form>
+  <% } else { %>
+    <aside class="notice-box event-closed-notice">
+      <p class="eyebrow">Registration Closed</p>
+      <h2>This event has already ended</h2>
+      <p>Participation requests are no longer accepted for this event. Please check the events page for upcoming coordinated activities.</p>
+      <a class="btn secondary" href="/events">View Events</a>
+    </aside>
+  <% } %>
   <aside class="notice-box">
     <h2>Coordination Reminder</h2>
     <p>Participation requests are reviewed by staff. Please wait for confirmation before visiting or sending supplies so activities stay respectful, organized, and privacy-safe.</p>
@@ -46,4 +55,3 @@
 </section>
 
 <%- include('../partials/public-footer') %>
-

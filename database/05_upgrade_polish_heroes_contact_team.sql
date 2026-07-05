@@ -30,18 +30,18 @@ UPDATE pages
 SET
   hero_eyebrow = CASE page_slug
     WHEN 'home' THEN 'Legacy, care, and compassionate service'
-    WHEN 'about' THEN 'About the Foundation'
+    WHEN 'about' THEN 'About and official contacts'
     WHEN 'legacy' THEN 'Foundation Legacy'
     WHEN 'support' THEN 'Support and Donation Information'
-    WHEN 'contact' THEN 'Official Contacts'
+    WHEN 'contact' THEN 'Merged into About & Contact'
     ELSE page_name
   END,
   hero_summary = CASE page_slug
     WHEN 'home' THEN 'A respectful legacy website sharing the foundation mission, safe stories from staff, and ways to support the work.'
-    WHEN 'about' THEN 'Learn about the foundation background, mission, vision, values, and service approach.'
+    WHEN 'about' THEN 'Learn about the foundation background, mission, vision, values, service approach, and official contact channels.'
     WHEN 'legacy' THEN 'Milestones, partnerships, and the continuing story of service.'
     WHEN 'support' THEN 'Coordinate donations, online giving, and event participation through official foundation channels.'
-    WHEN 'contact' THEN 'Official contact channels, location map, and the foundation team contacts.'
+    WHEN 'contact' THEN 'Contact details now appear on the About & Contact public page.'
     ELSE content
   END,
   hero_image_path = CASE page_slug

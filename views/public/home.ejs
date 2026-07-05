@@ -9,7 +9,7 @@
       <a class="btn primary" href="/legacy">Learn Our Legacy</a>
       <a class="btn secondary" href="/caregiver-stories">Read Caregiver Stories</a>
       <a class="btn secondary" href="/support">Support the Foundation</a>
-      <a class="btn ghost" href="/contact">Contact Us</a>
+      <a class="btn ghost" href="/about#contact">Contact Us</a>
     </div>
   </div>
   <div class="hero-panel">
@@ -79,13 +79,20 @@
     <a class="btn primary" href="/events">View Events</a>
   </div>
   <div class="mini-list">
-    <% events.forEach((event) => { %>
+    <% if (events.length) { %>
+      <% events.forEach((event) => { %>
+        <article>
+          <p class="meta"><%= helpers.formatDateTime(event.event_date) %></p>
+          <h3><%= event.title %></h3>
+          <p><%= helpers.excerpt(event.description, 120) %></p>
+        </article>
+      <% }) %>
+    <% } else { %>
       <article>
-        <p class="meta"><%= helpers.formatDateTime(event.event_date) %></p>
-        <h3><%= event.title %></h3>
-        <p><%= helpers.excerpt(event.description, 120) %></p>
+        <h3>No upcoming events</h3>
+        <p>New volunteer, donation, and visit activities will appear here after they are published.</p>
       </article>
-    <% }) %>
+    <% } %>
   </div>
 </section>
 

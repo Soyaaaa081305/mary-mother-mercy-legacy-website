@@ -11,6 +11,7 @@ const publicRoutes = require('./src/routes/publicRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const { setupDatabase } = require('./src/utils/databaseSetup');
+const { applyContentPatches } = require('./src/utils/contentPatches');
 
 const app = express();
 const PORT = Number(process.env.PORT || process.env.APP_PORT || 3000);
@@ -157,6 +158,7 @@ async function start() {
   if (process.env.AUTO_INIT_DB === 'true') {
     await setupDatabase(pool, { initializeIfEmpty: true });
   }
+  await applyContentPatches(pool);
 
   app.listen(PORT, HOST, () => {
     console.log(`Mary Mother CMS running at http://localhost:${PORT}`);

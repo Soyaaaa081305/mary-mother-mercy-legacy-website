@@ -1,10 +1,6 @@
 <%- include('../partials/public-header', { title }) %>
 
-<section class="page-hero">
-  <p class="eyebrow">Foundation Videos</p>
-  <h1>Watch approved website videos</h1>
-  <p>Videos are managed as YouTube or Vimeo links in the CMS. This avoids heavy direct video uploads and keeps hosting easier for a published website.</p>
-</section>
+<%- include('../partials/page-hero', { hero }) %>
 
 <section class="video-grid content-band">
   <% videos.forEach((video) => { %>
@@ -24,4 +20,3 @@
 </section>
 
 <%- include('../partials/public-footer') %>
-

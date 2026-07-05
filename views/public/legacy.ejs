@@ -1,12 +1,6 @@
 <%- include('../partials/public-header', { title }) %>
 
-<section class="page-hero">
-  <p class="eyebrow">Foundation Legacy</p>
-  <h1><%= page ? page.title : 'Our Legacy' %></h1>
-  <% if (page) { %>
-    <p><%= page.content %></p>
-  <% } %>
-</section>
+<%- include('../partials/page-hero', { hero }) %>
 
 <section class="timeline">
   <% entries.forEach((entry, index) => { %>
@@ -26,4 +20,3 @@
 </section>
 
 <%- include('../partials/public-footer') %>
-

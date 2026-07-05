@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="<%= csrfToken %>">
+  <title><%= title %> | Mary Mother CMS</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="login-body">
+  <main class="login-card">
+    <div class="brand-row">
+      <span class="brand-mark">MM</span>
+      <div>
+        <h1>Verify Login</h1>
+        <p>Enter the code sent to <%= pending.maskedRecipient %></p>
+      </div>
+    </div>
+    <%- include('../../partials/flashes') %>
+    <% if (typeof error !== 'undefined') { %>
+      <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    <form method="post" action="/admin/verify-otp">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>6-Digit Login Code
+        <input class="otp-input" type="text" name="otp_code" value="<%= form.otp_code || '' %>" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required autofocus>
+      </label>
+      <label class="check-row">
+        <input type="checkbox" name="trust_device">
+        <span>Trust this device for <%= trustHours %> hours</span>
+      </label>
+      <button class="btn primary full" type="submit">Verify Code</button>
+    </form>
+    <form method="post" action="/admin/resend-otp" class="inline-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn secondary full" type="submit">Send New Code</button>
+    </form>
+    <a class="text-link centered" href="/admin/login">Use a different admin account</a>
+  </main>
+</body>
+</html>

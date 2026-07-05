@@ -12,10 +12,42 @@ const authRoutes = require('./src/routes/authRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 
 const app = express();
-const PORT = Number(process.env.APP_PORT || 3000);
+const PORT = Number(process.env.PORT || process.env.APP_PORT || 3000);
+const HOST = process.env.HOST || '0.0.0.0';
+const isProduction = process.env.NODE_ENV === 'production';
+const paymongoSecretKey = process.env.PAYMONGO_SECRET_KEY || '';
+const paymongoWebhookMode = process.env.PAYMONGO_WEBHOOK_MODE === 'live' ? 'live' : 'test';
+const isPaymongoTestMode = !paymongoSecretKey.startsWith('sk_live_') || paymongoWebhookMode !== 'live';
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.disable('x-powered-by');
+
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+
+  if (isProduction) {
+    res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+  }
+
+  if (req.path.startsWith('/admin')) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  }
+
+  if (req.path.startsWith('/webhooks') || req.path.startsWith('/webhook_paymongo')) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  }
+
+  next();
+});
 
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.json({
@@ -34,6 +66,7 @@ app.use(
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
+      secure: isProduction,
       maxAge: 1000 * 60 * 60 * 2
     }
   })
@@ -45,11 +78,20 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.session.user || null;
   res.locals.flash = req.session.flash || null;
   res.locals.currentPath = req.path;
+  res.locals.isPaymongoTestMode = isPaymongoTestMode;
   req.session.flash = null;
   next();
 });
 
 app.use(csrfProtection);
+
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    app: 'mary-mother-cms',
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
 app.use(async (req, res, next) => {
   try {
@@ -102,6 +144,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log(`Mary Mother CMS running at http://localhost:${PORT}`);
 });

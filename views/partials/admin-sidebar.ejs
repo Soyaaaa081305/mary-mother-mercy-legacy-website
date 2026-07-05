@@ -4,23 +4,26 @@
     <span>Mary Mother CMS</span>
   </a>
   <nav>
+    <span class="nav-section-title">Overview</span>
     <a href="/admin/dashboard" class="<%= currentPath.startsWith('/admin/dashboard') ? 'active' : '' %>">Dashboard</a>
     <% if (currentUser.role !== 'Viewer') { %>
+      <span class="nav-section-title">Website Content</span>
       <a href="/admin/pages" class="<%= currentPath.startsWith('/admin/pages') ? 'active' : '' %>">Pages</a>
       <a href="/admin/legacy" class="<%= currentPath.startsWith('/admin/legacy') ? 'active' : '' %>">Legacy Content</a>
       <a href="/admin/stories" class="<%= currentPath.startsWith('/admin/stories') ? 'active' : '' %>">Caregiver Stories</a>
       <a href="/admin/gallery" class="<%= currentPath.startsWith('/admin/gallery') ? 'active' : '' %>">Gallery</a>
-      <a href="/admin/events" class="<%= currentPath.startsWith('/admin/events') ? 'active' : '' %>">Events</a>
       <a href="/admin/videos" class="<%= currentPath.startsWith('/admin/videos') ? 'active' : '' %>">Videos</a>
+      <span class="nav-section-title">Engagement</span>
+      <a href="/admin/events" class="<%= currentPath.startsWith('/admin/events') ? 'active' : '' %>">Events</a>
       <a href="/admin/support/edit" class="<%= currentPath.startsWith('/admin/support') ? 'active' : '' %>">Support Info</a>
       <a href="/admin/donations" class="<%= currentPath.startsWith('/admin/donations') ? 'active' : '' %>">Donations</a>
+      <a href="/admin/contact-team" class="<%= currentPath.startsWith('/admin/contact-team') ? 'active' : '' %>">Contact Team</a>
     <% } %>
+    <span class="nav-section-title">Communication</span>
     <a href="/admin/messages" class="<%= currentPath.startsWith('/admin/messages') ? 'active' : '' %>">Messages</a>
     <% if (currentUser.role === 'Super Admin') { %>
+      <span class="nav-section-title">Administration</span>
       <a href="/admin/users" class="<%= currentPath.startsWith('/admin/users') ? 'active' : '' %>">Admin Users</a>
-    <% } %>
-    <% if (currentUser.role !== 'Viewer') { %>
-      <a href="/admin/activity" class="<%= currentPath.startsWith('/admin/activity') ? 'active' : '' %>">Activity Logs</a>
     <% } %>
     <a href="/" target="_blank">View Website</a>
   </nav>

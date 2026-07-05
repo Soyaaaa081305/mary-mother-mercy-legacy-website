@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /webhooks/
+Disallow: /webhook_paymongo.php
+Disallow: /donation/success
+Disallow: /donation/cancel

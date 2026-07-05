@@ -8,22 +8,52 @@ VALUES
   ('Dashboard Viewer', 'viewer@marymother.local', 'scrypt$16384$8$1$7b50094d688106bee2132b503e0d309a$1d07dc99a4fbc80639c3cdb55ad5eb243c3a8820751c37a968bff982f254045191b2f1f3b52d57cc2cdaff1de589f87921e0187e5dc8fe5ca244fb7f32e390d5', 'Viewer', 'Active');
 
 INSERT INTO pages
-  (page_name, page_slug, title, content, status)
+  (page_name, page_slug, hero_eyebrow, title, hero_summary, hero_image_path, content, status)
 VALUES
-  ('Home Page', 'home', 'Mary Mother of Mercy Home For the Elderly And Abandoned Foundation',
+  ('Home Page', 'home', 'Legacy, care, and compassionate service', 'Mary Mother of Mercy Home For the Elderly And Abandoned Foundation',
+   'A respectful legacy website sharing the foundation mission, safe stories from staff, and ways to support the work.',
+   '/images/placeholders/compassion-care.jpg',
    'Mary Mother of Mercy Home is a compassionate foundation dedicated to providing respectful care, safe shelter, and steady support for vulnerable elderly persons. This legacy website shares the foundation history, mission, services, and staff reflections while protecting the privacy and dignity of everyone served.',
    'Published'),
-  ('About Page', 'about', 'About the Foundation',
+  ('About Page', 'about', 'About the Foundation', 'About the Foundation',
+   'Learn about the foundation background, mission, vision, values, and service approach.',
+   '/images/placeholders/facility-1.jpg',
    'The foundation exists to offer a caring home environment, daily assistance, spiritual encouragement, and community support. Its work is guided by mercy, dignity, patience, service, and respect. The website describes the organization and its programs without revealing private resident details.',
    'Published'),
-  ('Legacy Page', 'legacy', 'Our Legacy of Mercy and Care',
+  ('Legacy Page', 'legacy', 'Foundation Legacy', 'Our Legacy of Mercy and Care',
+   'Milestones, partnerships, and the continuing story of service.',
+   '/images/placeholders/legacy-founding.jpg',
    'The legacy of Mary Mother of Mercy Home is told through years of service, community partnership, volunteer generosity, and the commitment of staff who continue to serve with compassion.',
    'Published'),
-  ('Support Page', 'support', 'Support the Foundation',
+  ('Support Page', 'support', 'Support and Donation Information', 'Support the Foundation',
+   'Coordinate donations, online giving, and event participation through official foundation channels.',
+   '/images/placeholders/donations-1.jpg',
    'Support may be given through financial assistance, food, hygiene supplies, medicines coordinated through staff, clothing, facility supplies, volunteer help, and prayerful encouragement. Online payment processing is not included in this system.',
    'Published'),
-  ('Contact Page', 'contact', 'Contact Mary Mother of Mercy Home',
+  ('Contact Page', 'contact', 'Official Contacts', 'Contact Mary Mother of Mercy Home',
+   'Official contact channels, location map, and the foundation team contacts.',
+   '/images/placeholders/staff-1.jpg',
    'Reach out to the foundation for inquiries, visits, donations, volunteer coordination, or partnership opportunities. Messages sent through this website are saved for staff review.',
+   'Published'),
+  ('Stories Page', 'stories', 'Nurses and Caregivers Stories', 'Stories from the Staff Who Serve',
+   'Privacy-safe reflections from nurses, caregivers, volunteers, and staff.',
+   '/images/placeholders/caregiver-service.jpg',
+   'Stories focus on compassion, teamwork, lessons learned, and daily service while protecting private resident information.',
+   'Published'),
+  ('Gallery Page', 'gallery', 'Photo Gallery', 'Foundation Activities and Community Support',
+   'Approved photos grouped by facility, events, outreach, volunteers, staff activities, and donations.',
+   '/images/placeholders/community-support.jpg',
+   'Photos are grouped by category and managed through the admin CMS.',
+   'Published'),
+  ('Videos Page', 'videos', 'Foundation Videos', 'Watch Approved Website Videos',
+   'Approved YouTube or Vimeo videos embedded on the website.',
+   '/images/placeholders/teamwork.jpg',
+   'Videos are managed as links in the CMS, avoiding heavy direct uploads while keeping public viewing simple.',
+   'Published'),
+  ('Events Page', 'events', 'Events and Participation', 'Join Coordinated Foundation Activities',
+   'Volunteer orientations, donation drives, and community activities published by the foundation.',
+   '/images/placeholders/event-1.jpg',
+   'Submit participation requests for volunteer orientations, donation drives, and community support activities.',
    'Published');
 
 INSERT INTO legacy_entries
@@ -78,19 +108,26 @@ VALUES
   (6, 'Support Packages', 'Support packages prepared for foundation use.', '/images/placeholders/donations-2.jpg', 'Support packages ready for delivery', 2, 'Published');
 
 INSERT INTO support_information
-  (title, content, bank_details, in_kind_donations, contact_person, contact_number, foundation_address, foundation_email, facebook_url, youtube_url, google_maps_query, updated_by)
+  (title, content, bank_details, in_kind_donations, contact_person, contact_number, telephone_number, gmail_address, foundation_address, foundation_email, facebook_url, youtube_url, google_maps_query, updated_by)
 VALUES
   ('Ways to Support Mary Mother of Mercy Home',
    'The foundation welcomes responsible support from individuals, families, schools, churches, civic groups, and partner organizations. Please contact staff before sending financial or in-kind donations so the foundation can confirm current needs.',
    'Sample Bank: Mercy Community Bank\nAccount Name: Mary Mother of Mercy Home Foundation\nAccount Number: 0000-0000-0000\nNote: Replace these sample details with verified foundation information before public use.',
    'Food supplies, hygiene kits, cleaning materials, adult care supplies, vitamins coordinated through staff, linens, clothing in good condition, and facility maintenance supplies.',
-   'Foundation Office', '+63 900 000 0000',
+   'Foundation Office', '+63 900 000 0000', '(02) 0000 0000', 'marymotherfoundation@gmail.com',
    'Replace with verified foundation address, Philippines',
    'info@marymother.local',
    'https://www.facebook.com/',
    'https://www.youtube.com/',
    'Mary Mother of Mercy Home For the Elderly And Abandoned Foundation Philippines',
    1);
+
+INSERT INTO contact_team_members
+  (display_name, role_title, email, phone_number, profile_image_path, display_order, status, created_by)
+VALUES
+  ('Foundation Office', 'General Inquiries', 'info@marymother.local', '+63 900 000 0000', '/images/placeholders/team-office.jpg', 1, 'Published', 1),
+  ('Donation Coordinator', 'Support and Donations', 'donations@marymother.local', '+63 900 111 2222', '/images/placeholders/team-donations.jpg', 2, 'Published', 1),
+  ('Volunteer Coordinator', 'Events and Participation', 'volunteer@marymother.local', '+63 900 333 4444', '/images/placeholders/team-volunteer.jpg', 3, 'Published', 2);
 
 INSERT INTO donation_records
   (donor_name, donor_email, donor_phone, amount, message, reference_number, payment_status)

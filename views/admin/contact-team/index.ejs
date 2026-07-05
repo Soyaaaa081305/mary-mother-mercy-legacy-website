@@ -1,0 +1,47 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="admin-panel">
+  <div class="panel-header">
+    <h2>Contact Team</h2>
+    <a class="btn primary" href="/admin/contact-team/new">Add Member</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Profile</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Contact</th>
+          <th>Order</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% members.forEach((member) => { %>
+          <tr>
+            <td><img class="thumb round" src="<%= member.profile_image_path || '/images/placeholders/team-office.jpg' %>" alt="<%= member.display_name %>"></td>
+            <td><%= member.display_name %></td>
+            <td><%= member.role_title %></td>
+            <td>
+              <small><%= member.email || '-' %></small>
+              <small><%= member.phone_number || '-' %></small>
+            </td>
+            <td><%= member.display_order %></td>
+            <td><span class="status <%= member.status.toLowerCase() %>"><%= member.status %></span></td>
+            <td class="actions">
+              <a class="btn small secondary" href="/admin/contact-team/<%= member.member_id %>/edit">Edit</a>
+              <form method="post" action="/admin/contact-team/<%= member.member_id %>/delete" onsubmit="return confirm('Delete this contact team member?');">
+                <button class="btn small danger" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../../partials/admin-footer') %>
+

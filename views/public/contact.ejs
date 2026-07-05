@@ -1,11 +1,147 @@
 <%- include('../partials/public-header', { title }) %>
 
-<section class="page-hero">
-  <p class="eyebrow">Contact Us</p>
-  <h1><%= page ? page.title : 'Contact the Foundation' %></h1>
-  <% if (page) { %>
-    <p><%= page.content %></p>
-  <% } %>
+<%- include('../partials/page-hero', { hero }) %>
+
+<section class="contact-overview">
+  <article class="contact-card official-contact">
+    <p class="eyebrow">Official Contact Channels</p>
+    <h2>Reach the foundation office</h2>
+    <dl>
+      <div>
+        <dt>Email</dt>
+        <dd><%= siteInfo.foundation_email || 'info@marymother.local' %></dd>
+      </div>
+      <div>
+        <dt>Gmail</dt>
+        <dd><%= siteInfo.gmail_address || 'marymotherfoundation@gmail.com' %></dd>
+      </div>
+      <div>
+        <dt>Telephone</dt>
+        <dd><%= siteInfo.telephone_number || '(02) 0000 0000' %></dd>
+      </div>
+      <div>
+        <dt>Contact Number</dt>
+        <dd><%= siteInfo.contact_number || '+63 900 000 0000' %></dd>
+      </div>
+      <div>
+        <dt>Address</dt>
+        <dd><%= siteInfo.foundation_address || 'Replace with verified foundation address.' %></dd>
+      </div>
+    </dl>
+    <% if (siteInfo.facebook_url) { %>
+      <a class="btn secondary" href="<%= siteInfo.facebook_url %>" target="_blank" rel="noopener">Facebook Page</a>
+    <% } %>
+  </article>
+
+  <aside class="contact-card">
+    <h2>Location Map</h2>
+    <iframe class="map-iframe" title="Foundation location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="<%= googleMapEmbedSrc %>" allowfullscreen></iframe>
+  </aside>
+</section>
+
+<section class="content-band">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Foundation Team</p>
+      <h2>Contact Persons</h2>
+    </div>
+  </div>
+  <div class="team-grid">
+    <% teamMembers.forEach((member) => { %>
+      <article class="team-card">
+        <img src="<%= member.profile_image_path || '/images/placeholders/team-office.jpg' %>" alt="<%= member.display_name %>">
+        <div>
+          <h3><%= member.display_name %></h3>
+          <p class="meta"><%= member.role_title %></p>
+          <% if (member.email) { %><p><%= member.email %></p><% } %>
+          <% if (member.phone_number) { %><p><%= member.phone_number %></p><% } %>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="org-chart-section">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">Organizational Chart</p>
+      <h2>Foundation structure</h2>
+    </div>
+  </div>
+  <div class="org-structure" aria-label="Mary Mother of Mercy Home organizational chart">
+    <div class="org-level org-level-single">
+      <article class="org-node org-node-text">
+        <span>General Assembly</span>
+      </article>
+      <article class="org-node org-node-text">
+        <span>Board of Trustees</span>
+      </article>
+    </div>
+
+    <div class="org-level org-level-director">
+      <article class="org-node org-node-lead">
+        <img src="/images/mary-mother/team-ferdinand-gerodias.jpg" alt="Ferdinand C. Gerodias, M.D.">
+        <div>
+          <h3>Ferdinand C. Gerodias, M.D.</h3>
+          <p>Executive Director</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="org-level org-level-grid">
+      <article class="org-node">
+        <img src="/images/mary-mother/team-sr-venus-pegar.jpg" alt="Sr. Venus Marie S. Pegar">
+        <div>
+          <h3>Sr. Venus Marie S. Pegar, sfx, RSW</h3>
+          <p>Case Manager / Center Head</p>
+        </div>
+      </article>
+      <article class="org-node">
+        <img src="/images/mary-mother/team-sr-mary-grace.jpg" alt="Sr. Mary Grace">
+        <div>
+          <h3>Sr. Mary Grace, sfx</h3>
+          <p>Nutrition and Health Coordinator</p>
+        </div>
+      </article>
+      <article class="org-node">
+        <img src="/images/mary-mother/team-sr-roselyn.jpg" alt="Sr. Roselyn">
+        <div>
+          <h3>Sr. Roselyn, sfx</h3>
+          <p>Supervising Caregiver</p>
+        </div>
+      </article>
+      <article class="org-node">
+        <img src="/images/mary-mother/team-sr-jay-ann-de-la-cruz.jpg" alt="Sr. Jay Ann De La Cruz">
+        <div>
+          <h3>Sr. Jay Ann De La Cruz, sfx</h3>
+          <p>Maintenance Coordinator</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="org-level org-level-grid org-level-support">
+      <article class="org-node">
+        <img src="/images/mary-mother/team-nasrifah-cabugatan.jpg" alt="Nasrifah M. Cabugatan">
+        <div>
+          <h3>Nasrifah M. Cabugatan, RSW</h3>
+          <p>Case Manager - 1</p>
+        </div>
+      </article>
+      <article class="org-node">
+        <img src="/images/mary-mother/team-karen-llona.jpg" alt="Karen Rose Llona">
+        <div>
+          <h3>Karen Rose Llona</h3>
+          <p>Registered Nurse</p>
+        </div>
+      </article>
+      <article class="org-node org-node-text">
+        <span>Caregivers</span>
+      </article>
+      <article class="org-node org-node-text">
+        <span>OJT Volunteers</span>
+      </article>
+    </div>
+  </div>
 </section>
 
 <section class="contact-layout">
@@ -35,19 +171,9 @@
     <button class="btn primary" type="submit">Send Message</button>
   </form>
 
-  <aside class="contact-card">
-    <h2>Foundation Details</h2>
-    <p><strong>Address:</strong> <%= siteInfo.foundation_address || 'Replace with verified foundation address.' %></p>
-    <p><strong>Phone:</strong> <%= siteInfo.contact_number || '+63 900 000 0000' %></p>
-    <p><strong>Email:</strong> <%= siteInfo.foundation_email || 'info@marymother.local' %></p>
-    <% if (siteInfo.facebook_url) { %>
-      <p><strong>Social:</strong> <a href="<%= siteInfo.facebook_url %>" target="_blank" rel="noopener">Facebook</a></p>
-    <% } %>
-    <% if (googleMapEmbedSrc) { %>
-      <iframe class="map-iframe" title="Foundation location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="<%= googleMapEmbedSrc %>" allowfullscreen></iframe>
-    <% } else { %>
-      <a class="map-placeholder" href="<%= googleMapSearchUrl %>" target="_blank" rel="noopener">Open location in Google Maps</a>
-    <% } %>
+  <aside class="notice-box">
+    <h2>Message Review</h2>
+    <p>Messages are saved in the CMS for authorized staff to review. For urgent matters, use the official phone or contact number above.</p>
   </aside>
 </section>
 

@@ -4,6 +4,12 @@
   <p class="eyebrow">Donation</p>
   <h1><%= heading %></h1>
   <p><%= message %></p>
+  <% if (isPaymongoTestMode) { %>
+    <div class="test-mode-notice inline">
+      <strong>Test mode</strong>
+      <span>This PayMongo checkout is for demo/testing only. No real donation payment is collected.</span>
+    </div>
+  <% } %>
   <% if (reference) { %>
     <p class="meta">Reference number: <%= reference %></p>
   <% } %>
@@ -11,4 +17,3 @@
 </section>
 
 <%- include('../partials/public-footer') %>
-

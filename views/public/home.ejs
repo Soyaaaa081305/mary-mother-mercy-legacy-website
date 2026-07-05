@@ -2,9 +2,9 @@
 
 <section class="hero">
   <div class="hero-copy">
-    <p class="eyebrow">Legacy, care, and compassionate service</p>
-    <h1><%= homePage ? homePage.title : 'Mary Mother of Mercy Home' %></h1>
-    <p><%= homePage ? homePage.content : 'A dynamic legacy website and CMS for sharing the foundation mission and staff stories.' %></p>
+    <p class="eyebrow"><%= hero.eyebrow %></p>
+    <h1><%= hero.title %></h1>
+    <p><%= hero.summary %></p>
     <div class="hero-actions">
       <a class="btn primary" href="/legacy">Learn Our Legacy</a>
       <a class="btn secondary" href="/caregiver-stories">Read Caregiver Stories</a>
@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="hero-panel">
-    <img src="/images/placeholders/compassion-care.jpg" alt="Warm care setting at the foundation">
+    <img src="<%= hero.imagePath %>" alt="<%= hero.title %>">
   </div>
 </section>
 
@@ -95,7 +95,7 @@
       <p class="eyebrow">Videos</p>
       <h2>Watch foundation media</h2>
     </div>
-    <a class="btn secondary" href="/videos">All Videos</a>
+    <a class="btn secondary" href="/videos">All Video</a>
   </div>
   <% if (videos.length) { %>
     <div class="video-card">

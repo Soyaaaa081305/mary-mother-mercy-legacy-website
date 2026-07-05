@@ -109,33 +109,55 @@ router.get('/pages/:id/edit', authorize(...editorRoles), async (req, res, next) 
   }
 });
 
-router.post('/pages/:id', authorize(...editorRoles), async (req, res, next) => {
-  try {
-    const page = {
-      id: req.params.id,
-      title: cleanString(req.body.title),
-      content: cleanString(req.body.content),
-      status: normalizeStatus(req.body.status)
-    };
-    const errors = requireFields(page, ['title', 'content']);
-    if (errors.length) {
-      setFlash(req, 'danger', errors.join(' '));
-      return res.redirect(`/admin/pages/${page.id}/edit`);
-    }
+router.post(
+  '/pages/:id',
+  authorize(...editorRoles),
+  uploadImage.single('hero_image'),
+  optimizeImage,
+  async (req, res, next) => {
+    try {
+      const existing = await getOne(`SELECT * FROM pages WHERE page_id = :id`, { id: req.params.id });
+      if (!existing) {
+        setFlash(req, 'warning', 'Page not found.');
+        return res.redirect('/admin/pages');
+      }
 
-    await query(
-      `UPDATE pages
-       SET title = :title, content = :content, status = :status
-       WHERE page_id = :id`,
-      page
-    );
-    await logActivity(req, 'Updated page content', 'pages', page.id);
-    setFlash(req, 'success', 'Page content updated.');
-    return res.redirect('/admin/pages');
-  } catch (error) {
-    return next(error);
+      const uploadedPath = publicUploadPath(req.file);
+      const page = {
+        id: req.params.id,
+        hero_eyebrow: cleanString(req.body.hero_eyebrow),
+        title: cleanString(req.body.title),
+        hero_summary: cleanString(req.body.hero_summary),
+        hero_image_path: uploadedPath || existing.hero_image_path,
+        content: cleanString(req.body.content),
+        status: normalizeStatus(req.body.status)
+      };
+      const errors = requireFields(page, ['title', 'content']);
+      if (errors.length) {
+        setFlash(req, 'danger', errors.join(' '));
+        return res.redirect(`/admin/pages/${page.id}/edit`);
+      }
+
+      await query(
+        `UPDATE pages
+         SET hero_eyebrow = :hero_eyebrow,
+             title = :title,
+             hero_summary = :hero_summary,
+             hero_image_path = :hero_image_path,
+             content = :content,
+             status = :status
+         WHERE page_id = :id`,
+        page
+      );
+      if (uploadedPath && existing.hero_image_path !== uploadedPath) removeUploadedFile(existing.hero_image_path);
+      await logActivity(req, 'Updated page content and hero', 'pages', page.id);
+      setFlash(req, 'success', 'Page content and hero updated.');
+      return res.redirect('/admin/pages');
+    } catch (error) {
+      return next(error);
+    }
   }
-});
+);
 
 router.get('/legacy', authorize(...editorRoles), async (req, res, next) => {
   try {
@@ -1041,6 +1063,153 @@ router.post('/videos/:id/delete', authorize(...editorRoles), async (req, res, ne
   }
 });
 
+router.get('/contact-team', authorize(...editorRoles), async (req, res, next) => {
+  try {
+    const members = await query(
+      `SELECT ctm.*, au.full_name AS creator_name
+       FROM contact_team_members ctm
+       LEFT JOIN admin_users au ON au.admin_id = ctm.created_by
+       ORDER BY ctm.display_order ASC, ctm.created_at ASC`
+    );
+    res.render('admin/contact-team/index', { title: 'Contact Team', members, helpers });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/contact-team/new', authorize(...editorRoles), (req, res) => {
+  res.render('admin/contact-team/form', {
+    title: 'New Contact Team Member',
+    member: {},
+    action: '/admin/contact-team'
+  });
+});
+
+router.post(
+  '/contact-team',
+  authorize(...editorRoles),
+  uploadImage.single('profile_image'),
+  optimizeImage,
+  async (req, res, next) => {
+    try {
+      const member = {
+        display_name: cleanString(req.body.display_name),
+        role_title: cleanString(req.body.role_title),
+        email: cleanString(req.body.email),
+        phone_number: cleanString(req.body.phone_number),
+        profile_image_path: publicUploadPath(req.file),
+        display_order: Number(req.body.display_order || 0),
+        status: normalizeStatus(req.body.status),
+        created_by: req.session.user.admin_id
+      };
+
+      const errors = requireFields(member, ['display_name', 'role_title']);
+      if (errors.length) {
+        setFlash(req, 'danger', errors.join(' '));
+        return res.redirect('/admin/contact-team/new');
+      }
+
+      const result = await query(
+        `INSERT INTO contact_team_members
+          (display_name, role_title, email, phone_number, profile_image_path, display_order, status, created_by)
+         VALUES
+          (:display_name, :role_title, :email, :phone_number, :profile_image_path, :display_order, :status, :created_by)`,
+        member
+      );
+      await logActivity(req, 'Created contact team member', 'contact_team_members', result.insertId);
+      setFlash(req, 'success', 'Contact team member created.');
+      return res.redirect('/admin/contact-team');
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+router.get('/contact-team/:id/edit', authorize(...editorRoles), async (req, res, next) => {
+  try {
+    const member = await getOne(`SELECT * FROM contact_team_members WHERE member_id = :id`, { id: req.params.id });
+    if (!member) {
+      setFlash(req, 'warning', 'Contact team member not found.');
+      return res.redirect('/admin/contact-team');
+    }
+    return res.render('admin/contact-team/form', {
+      title: 'Edit Contact Team Member',
+      member,
+      action: `/admin/contact-team/${member.member_id}`
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post(
+  '/contact-team/:id',
+  authorize(...editorRoles),
+  uploadImage.single('profile_image'),
+  optimizeImage,
+  async (req, res, next) => {
+    try {
+      const existing = await getOne(`SELECT * FROM contact_team_members WHERE member_id = :id`, { id: req.params.id });
+      if (!existing) {
+        setFlash(req, 'warning', 'Contact team member not found.');
+        return res.redirect('/admin/contact-team');
+      }
+
+      const uploadedPath = publicUploadPath(req.file);
+      const member = {
+        id: req.params.id,
+        display_name: cleanString(req.body.display_name),
+        role_title: cleanString(req.body.role_title),
+        email: cleanString(req.body.email),
+        phone_number: cleanString(req.body.phone_number),
+        profile_image_path: uploadedPath || existing.profile_image_path,
+        display_order: Number(req.body.display_order || 0),
+        status: normalizeStatus(req.body.status)
+      };
+
+      const errors = requireFields(member, ['display_name', 'role_title']);
+      if (errors.length) {
+        setFlash(req, 'danger', errors.join(' '));
+        return res.redirect(`/admin/contact-team/${member.id}/edit`);
+      }
+
+      await query(
+        `UPDATE contact_team_members
+         SET display_name = :display_name,
+             role_title = :role_title,
+             email = :email,
+             phone_number = :phone_number,
+             profile_image_path = :profile_image_path,
+             display_order = :display_order,
+             status = :status
+         WHERE member_id = :id`,
+        member
+      );
+      if (uploadedPath && existing.profile_image_path !== uploadedPath) removeUploadedFile(existing.profile_image_path);
+      await logActivity(req, 'Updated contact team member', 'contact_team_members', member.id);
+      setFlash(req, 'success', 'Contact team member updated.');
+      return res.redirect('/admin/contact-team');
+    } catch (error) {
+      return next(error);
+    }
+  }
+);
+
+router.post('/contact-team/:id/delete', authorize(...editorRoles), async (req, res, next) => {
+  try {
+    const existing = await getOne(`SELECT * FROM contact_team_members WHERE member_id = :id`, { id: req.params.id });
+    if (existing) {
+      await query(`DELETE FROM contact_team_members WHERE member_id = :id`, { id: req.params.id });
+      removeUploadedFile(existing.profile_image_path);
+      await logActivity(req, 'Deleted contact team member', 'contact_team_members', req.params.id);
+    }
+    setFlash(req, 'success', 'Contact team member deleted.');
+    return res.redirect('/admin/contact-team');
+  } catch (error) {
+    return next(error);
+  }
+});
+
 router.get('/support/edit', authorize(...editorRoles), async (req, res, next) => {
   try {
     const supportInfo = await getOne(
@@ -1064,6 +1233,8 @@ router.post('/support', authorize(...editorRoles), async (req, res, next) => {
       in_kind_donations: cleanString(req.body.in_kind_donations),
       contact_person: cleanString(req.body.contact_person),
       contact_number: cleanString(req.body.contact_number),
+      telephone_number: cleanString(req.body.telephone_number),
+      gmail_address: cleanString(req.body.gmail_address),
       foundation_address: cleanString(req.body.foundation_address),
       foundation_email: cleanString(req.body.foundation_email),
       facebook_url: cleanString(req.body.facebook_url),
@@ -1086,6 +1257,8 @@ router.post('/support', authorize(...editorRoles), async (req, res, next) => {
              in_kind_donations = :in_kind_donations,
              contact_person = :contact_person,
              contact_number = :contact_number,
+             telephone_number = :telephone_number,
+             gmail_address = :gmail_address,
              foundation_address = :foundation_address,
              foundation_email = :foundation_email,
              facebook_url = :facebook_url,
@@ -1099,9 +1272,9 @@ router.post('/support', authorize(...editorRoles), async (req, res, next) => {
     } else {
       const result = await query(
         `INSERT INTO support_information
-          (title, content, bank_details, in_kind_donations, contact_person, contact_number, foundation_address, foundation_email, facebook_url, youtube_url, google_maps_query, updated_by)
+          (title, content, bank_details, in_kind_donations, contact_person, contact_number, telephone_number, gmail_address, foundation_address, foundation_email, facebook_url, youtube_url, google_maps_query, updated_by)
          VALUES
-          (:title, :content, :bank_details, :in_kind_donations, :contact_person, :contact_number, :foundation_address, :foundation_email, :facebook_url, :youtube_url, :google_maps_query, :updated_by)`,
+          (:title, :content, :bank_details, :in_kind_donations, :contact_person, :contact_number, :telephone_number, :gmail_address, :foundation_address, :foundation_email, :facebook_url, :youtube_url, :google_maps_query, :updated_by)`,
         support
       );
       await logActivity(req, 'Created support information', 'support_information', result.insertId);
@@ -1298,19 +1471,9 @@ router.post('/users/:id/deactivate', authorize('Super Admin'), async (req, res, 
   }
 });
 
-router.get('/activity', authorize(...editorRoles), async (req, res, next) => {
-  try {
-    const logs = await query(
-      `SELECT al.*, au.full_name
-       FROM activity_logs al
-       LEFT JOIN admin_users au ON au.admin_id = al.admin_id
-       ORDER BY al.created_at DESC
-       LIMIT 200`
-    );
-    res.render('admin/activity/index', { title: 'Activity Logs', logs, helpers });
-  } catch (error) {
-    next(error);
-  }
+router.get('/activity', authorize(...editorRoles), (req, res) => {
+  setFlash(req, 'warning', 'Activity logs are available from the dashboard.');
+  return res.redirect('/admin/dashboard');
 });
 
 module.exports = router;

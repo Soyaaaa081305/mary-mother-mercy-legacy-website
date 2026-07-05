@@ -16,11 +16,44 @@ CREATE TABLE admin_users (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE admin_login_otps (
+  otp_id INT AUTO_INCREMENT PRIMARY KEY,
+  admin_id INT NOT NULL,
+  otp_hash VARCHAR(160) NOT NULL,
+  otp_salt VARCHAR(64) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  consumed_at DATETIME NULL,
+  attempts INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_admin_otp_user
+    FOREIGN KEY (admin_id) REFERENCES admin_users(admin_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE admin_otp_trusted_devices (
+  trusted_device_id INT AUTO_INCREMENT PRIMARY KEY,
+  admin_id INT NOT NULL,
+  token_hash VARCHAR(160) NOT NULL UNIQUE,
+  user_agent VARCHAR(255) NULL,
+  expires_at DATETIME NOT NULL,
+  last_used_at DATETIME NULL,
+  revoked_at DATETIME NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_admin_trusted_device_user
+    FOREIGN KEY (admin_id) REFERENCES admin_users(admin_id)
+    ON DELETE CASCADE
+);
+
 CREATE TABLE pages (
   page_id INT AUTO_INCREMENT PRIMARY KEY,
   page_name VARCHAR(100) NOT NULL,
   page_slug VARCHAR(100) NOT NULL UNIQUE,
+  hero_eyebrow VARCHAR(120) NULL,
   title VARCHAR(180) NOT NULL,
+  hero_summary TEXT NULL,
+  hero_image_path VARCHAR(1024) NULL,
   content TEXT NOT NULL,
   status ENUM('Draft', 'Published') NOT NULL DEFAULT 'Published',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -32,7 +65,7 @@ CREATE TABLE legacy_entries (
   title VARCHAR(180) NOT NULL,
   content TEXT NOT NULL,
   milestone_date DATE NULL,
-  image_path VARCHAR(255) NULL,
+  image_path VARCHAR(1024) NULL,
   display_order INT NOT NULL DEFAULT 0,
   status ENUM('Draft', 'Published') NOT NULL DEFAULT 'Draft',
   created_by INT NULL,
@@ -49,7 +82,7 @@ CREATE TABLE caregiver_stories (
   author_name VARCHAR(120) NOT NULL,
   author_role VARCHAR(100) NOT NULL,
   content TEXT NOT NULL,
-  featured_image_path VARCHAR(255) NULL,
+  featured_image_path VARCHAR(1024) NULL,
   status ENUM('Draft', 'Published') NOT NULL DEFAULT 'Draft',
   created_by INT NULL,
   published_at DATETIME NULL,
@@ -73,7 +106,7 @@ CREATE TABLE gallery_images (
   category_id INT NOT NULL,
   title VARCHAR(160) NOT NULL,
   caption TEXT NULL,
-  image_path VARCHAR(255) NOT NULL,
+  image_path VARCHAR(1024) NOT NULL,
   alt_text VARCHAR(180) NULL,
   uploaded_by INT NULL,
   status ENUM('Draft', 'Published') NOT NULL DEFAULT 'Published',
@@ -95,6 +128,8 @@ CREATE TABLE support_information (
   in_kind_donations TEXT NULL,
   contact_person VARCHAR(120) NULL,
   contact_number VARCHAR(80) NULL,
+  telephone_number VARCHAR(80) NULL,
+  gmail_address VARCHAR(160) NULL,
   foundation_address TEXT NULL,
   foundation_email VARCHAR(160) NULL,
   facebook_url VARCHAR(255) NULL,
@@ -105,6 +140,23 @@ CREATE TABLE support_information (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_support_updated_by
     FOREIGN KEY (updated_by) REFERENCES admin_users(admin_id)
+    ON DELETE SET NULL
+);
+
+CREATE TABLE contact_team_members (
+  member_id INT AUTO_INCREMENT PRIMARY KEY,
+  display_name VARCHAR(120) NOT NULL,
+  role_title VARCHAR(120) NOT NULL,
+  email VARCHAR(160) NULL,
+  phone_number VARCHAR(80) NULL,
+  profile_image_path VARCHAR(1024) NULL,
+  display_order INT NOT NULL DEFAULT 0,
+  status ENUM('Draft', 'Published') NOT NULL DEFAULT 'Published',
+  created_by INT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_contact_member_created_by
+    FOREIGN KEY (created_by) REFERENCES admin_users(admin_id)
     ON DELETE SET NULL
 );
 
@@ -140,7 +192,7 @@ CREATE TABLE events (
   description TEXT NOT NULL,
   event_date DATETIME NULL,
   location VARCHAR(180) NULL,
-  image_path VARCHAR(255) NULL,
+  image_path VARCHAR(1024) NULL,
   status ENUM('Draft', 'Published') NOT NULL DEFAULT 'Draft',
   created_by INT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -195,10 +247,13 @@ CREATE TABLE activity_logs (
 );
 
 CREATE INDEX idx_pages_slug_status ON pages(page_slug, status);
+CREATE INDEX idx_admin_otps_user_expiry ON admin_login_otps(admin_id, expires_at);
+CREATE INDEX idx_admin_trusted_devices_user_expiry ON admin_otp_trusted_devices(admin_id, expires_at);
 CREATE INDEX idx_legacy_status_order ON legacy_entries(status, display_order, milestone_date);
 CREATE INDEX idx_stories_status_date ON caregiver_stories(status, published_at);
 CREATE INDEX idx_gallery_status_category ON gallery_images(status, category_id);
 CREATE INDEX idx_messages_status_created ON contact_messages(status, created_at);
+CREATE INDEX idx_contact_team_status_order ON contact_team_members(status, display_order);
 CREATE INDEX idx_donation_reference ON donation_records(reference_number);
 CREATE INDEX idx_donation_status_created ON donation_records(payment_status, created_at);
 CREATE INDEX idx_events_status_date ON events(status, event_date);

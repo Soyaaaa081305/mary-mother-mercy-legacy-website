@@ -1,0 +1,19 @@
+<section class="page-hero visual-hero">
+  <div class="page-hero-copy">
+    <% if (hero.eyebrow) { %>
+      <p class="eyebrow"><%= hero.eyebrow %></p>
+    <% } %>
+    <h1><%= hero.title %></h1>
+    <% if (hero.summary) { %>
+      <p><%= hero.summary %></p>
+    <% } %>
+    <% if (typeof actionHref !== 'undefined' && actionHref) { %>
+      <a class="btn primary" href="<%= actionHref %>"><%= typeof actionLabel !== 'undefined' ? actionLabel : 'Continue' %></a>
+    <% } %>
+  </div>
+  <% if (hero.imagePath) { %>
+    <div class="page-hero-media">
+      <img src="<%= hero.imagePath %>" alt="<%= hero.title %>">
+    </div>
+  <% } %>
+</section>

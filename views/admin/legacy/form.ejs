@@ -1,6 +1,6 @@
 <%- include('../../partials/admin-header', { title }) %>
 
-<form class="admin-panel form-grid" method="post" action="<%= action %>" enctype="multipart/form-data">
+<form class="admin-panel form-grid" method="post" action="<%= action %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
   <label>Title
     <input type="text" name="title" value="<%= entry.title || '' %>" required>
   </label>
@@ -35,4 +35,3 @@
 </form>
 
 <%- include('../../partials/admin-footer') %>
-

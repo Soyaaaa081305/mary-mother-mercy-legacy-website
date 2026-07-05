@@ -1,26 +1,56 @@
 <%- include('../../partials/admin-header', { title }) %>
 
-<form class="admin-panel form-grid" method="post" action="/admin/pages/<%= page.page_id %>">
-  <label>Page Name
-    <input type="text" value="<%= page.page_name %>" disabled>
-  </label>
-  <label>Title
-    <input type="text" name="title" value="<%= page.title %>" required>
-  </label>
-  <label>Status
-    <select name="status">
-      <option value="Published" <%= page.status === 'Published' ? 'selected' : '' %>>Published</option>
-      <option value="Draft" <%= page.status === 'Draft' ? 'selected' : '' %>>Draft</option>
-    </select>
-  </label>
-  <label class="full-span">Content
-    <textarea name="content" rows="12" required><%= page.content %></textarea>
-  </label>
-  <div class="form-actions">
-    <button class="btn primary" type="submit">Save Page</button>
-    <a class="btn secondary" href="/admin/pages">Cancel</a>
-  </div>
-</form>
+<section class="editor-preview-layout">
+  <form class="admin-panel form-grid" method="post" action="/admin/pages/<%= page.page_id %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data" data-preview-form>
+    <label>Page Name
+      <input type="text" value="<%= page.page_name %>" disabled>
+    </label>
+    <label>Status
+      <select name="status">
+        <option value="Published" <%= page.status === 'Published' ? 'selected' : '' %>>Published</option>
+        <option value="Draft" <%= page.status === 'Draft' ? 'selected' : '' %>>Draft</option>
+      </select>
+    </label>
+    <label>Hero Eyebrow
+      <input type="text" name="hero_eyebrow" value="<%= page.hero_eyebrow || '' %>" data-preview-target="eyebrow">
+    </label>
+    <label>Hero Title
+      <input type="text" name="title" value="<%= page.title %>" required data-preview-target="title">
+    </label>
+    <label class="full-span">Hero Summary
+      <textarea name="hero_summary" rows="4" data-preview-target="summary"><%= page.hero_summary || '' %></textarea>
+    </label>
+    <label class="full-span">Hero Image
+      <input type="file" name="hero_image" accept="image/jpeg,image/png,image/webp,image/gif" data-preview-image-input>
+    </label>
+    <% if (page.hero_image_path) { %>
+      <div class="image-preview full-span">
+        <img src="<%= page.hero_image_path %>" alt="<%= page.title %>">
+        <span>Current hero image</span>
+      </div>
+    <% } %>
+    <label class="full-span">Page Content
+      <textarea name="content" rows="12" required data-preview-target="content"><%= page.content %></textarea>
+    </label>
+    <div class="form-actions">
+      <button class="btn primary" type="submit">Save Page</button>
+      <a class="btn secondary" href="/admin/pages">Cancel</a>
+      <a class="btn ghost" href="/<%= page.page_slug === 'home' ? '' : (page.page_slug === 'stories' ? 'caregiver-stories' : page.page_slug) %>" target="_blank">Open Public Page</a>
+    </div>
+  </form>
+
+  <aside class="admin-panel live-preview">
+    <p class="eyebrow">Live Preview</p>
+    <div class="preview-hero">
+      <div class="preview-hero-copy">
+        <span class="eyebrow" data-preview-output="eyebrow"><%= page.hero_eyebrow || page.page_name %></span>
+        <h2 data-preview-output="title"><%= page.title %></h2>
+        <p data-preview-output="summary"><%= page.hero_summary || page.content %></p>
+      </div>
+      <img data-preview-image src="<%= page.hero_image_path || '/images/placeholders/compassion-care.jpg' %>" alt="Hero preview">
+    </div>
+    <div class="preview-content" data-preview-output="content"><%= page.content %></div>
+  </aside>
+</section>
 
 <%- include('../../partials/admin-footer') %>
-

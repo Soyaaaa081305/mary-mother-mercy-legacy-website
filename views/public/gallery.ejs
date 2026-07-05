@@ -1,10 +1,6 @@
 <%- include('../partials/public-header', { title }) %>
 
-<section class="page-hero">
-  <p class="eyebrow">Photo Gallery</p>
-  <h1>Foundation activities and community support</h1>
-  <p>Photos are grouped by category and managed through the admin CMS.</p>
-</section>
+<%- include('../partials/page-hero', { hero }) %>
 
 <section class="category-strip">
   <% categories.forEach((category) => { %>
@@ -28,4 +24,3 @@
 </section>
 
 <%- include('../partials/public-footer') %>
-

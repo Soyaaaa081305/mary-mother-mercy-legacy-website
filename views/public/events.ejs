@@ -1,10 +1,6 @@
 <%- include('../partials/public-header', { title }) %>
 
-<section class="page-hero">
-  <p class="eyebrow">Events and Participation</p>
-  <h1>Join coordinated foundation activities</h1>
-  <p>Submit participation requests for volunteer orientations, donation drives, and community support activities. Staff will review and coordinate details before confirming.</p>
-</section>
+<%- include('../partials/page-hero', { hero }) %>
 
 <section class="card-grid three content-band">
   <% events.forEach((event) => { %>
@@ -24,4 +20,3 @@
 </section>
 
 <%- include('../partials/public-footer') %>
-

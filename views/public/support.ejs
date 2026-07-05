@@ -1,68 +1,86 @@
 <%- include('../partials/public-header', { title }) %>
 
-<section class="page-hero">
-  <p class="eyebrow">Support and Donation Information</p>
-  <h1><%= supportInfo ? supportInfo.title : 'Support the Foundation' %></h1>
-  <% if (page) { %>
-    <p><%= page.content %></p>
-  <% } %>
-</section>
+<%- include('../partials/page-hero', { hero }) %>
 
-<section class="support-layout">
-  <article>
-    <h2>How people can help</h2>
-    <p><%- helpers.nl2br(supportInfo ? supportInfo.content : 'Support details are not yet available.') %></p>
-  </article>
-  <article>
-    <h2>Bank or support channels</h2>
-    <p><%- helpers.nl2br(supportInfo ? supportInfo.bank_details : 'Please contact the foundation office for verified details.') %></p>
-  </article>
-  <article>
-    <h2>Accepted in-kind donations</h2>
-    <p><%- helpers.nl2br(supportInfo ? supportInfo.in_kind_donations : 'Please contact staff before sending supplies.') %></p>
-  </article>
-  <article>
-    <h2>Contact person</h2>
-    <p><%= supportInfo ? supportInfo.contact_person : 'Foundation Office' %></p>
-    <p><%= supportInfo ? supportInfo.contact_number : 'To be updated' %></p>
-  </article>
-</section>
+<section class="support-page">
+  <div class="support-details">
+    <article class="support-lead">
+      <p class="eyebrow">Ways to Help</p>
+      <h2>Coordinate support through official foundation channels</h2>
+      <p><%- helpers.nl2br(supportInfo ? supportInfo.content : 'Support details are not yet available.') %></p>
+    </article>
 
-<section class="contact-layout">
-  <form class="form-panel" method="post" action="/donate">
-    <p class="eyebrow">PayMongo Checkout</p>
-    <h2>Donate Online</h2>
-    <% if (donationErrors && donationErrors.length) { %>
-      <div class="alert alert-danger">
-        <% donationErrors.forEach((error) => { %>
-          <p><%= error %></p>
-        <% }) %>
+    <div class="support-info-grid">
+      <article>
+        <h3>Bank and Support Channels</h3>
+        <p><%- helpers.nl2br(supportInfo ? supportInfo.bank_details : 'Please contact the foundation office for verified details.') %></p>
+      </article>
+      <article>
+        <h3>In-Kind Donations</h3>
+        <p><%- helpers.nl2br(supportInfo ? supportInfo.in_kind_donations : 'Please contact staff before sending supplies.') %></p>
+      </article>
+      <article>
+        <h3>Contact Person</h3>
+        <p><strong><%= supportInfo ? supportInfo.contact_person : 'Foundation Office' %></strong></p>
+        <p><%= supportInfo ? supportInfo.contact_number : 'To be updated' %></p>
+        <% if (supportInfo && supportInfo.foundation_email) { %>
+          <p><%= supportInfo.foundation_email %></p>
+        <% } %>
+      </article>
+    </div>
+  </div>
+
+  <aside class="donation-card">
+    <form method="post" action="/donate">
+      <p class="eyebrow">PayMongo Checkout</p>
+      <h2>Donate Online</h2>
+      <p class="donation-note">You will be redirected to PayMongo's secure hosted checkout page.</p>
+      <% if (isPaymongoTestMode) { %>
+        <div class="test-mode-notice">
+          <strong>Test mode checkout</strong>
+          <span>This public demo uses PayMongo test mode. No real money will be collected.</span>
+        </div>
+      <% } %>
+      <% if (donationErrors && donationErrors.length) { %>
+        <div class="alert alert-danger">
+          <% donationErrors.forEach((error) => { %>
+            <p><%= error %></p>
+          <% }) %>
+        </div>
+      <% } %>
+      <label>Donor Name
+        <input type="text" name="donor_name" value="<%= donationForm.donor_name || '' %>" required>
+      </label>
+      <label>Email
+        <input type="email" name="donor_email" value="<%= donationForm.donor_email || '' %>" required>
+      </label>
+      <label>Phone Number
+        <input type="text" name="donor_phone" value="<%= donationForm.donor_phone || '' %>">
+      </label>
+      <label>Donation Amount
+        <span class="amount-input">
+          <span>PHP</span>
+          <input type="number" name="amount" min="20" step="1" value="<%= donationForm.amount || '500' %>" required>
+        </span>
+      </label>
+      <label>Message
+        <textarea name="message" rows="4"><%= donationForm.message || '' %></textarea>
+      </label>
+      <div class="donation-actions">
+        <button class="btn primary" type="submit">Proceed to PayMongo</button>
       </div>
-    <% } %>
-    <label>Donor Name
-      <input type="text" name="donor_name" value="<%= donationForm.donor_name || '' %>" required>
-    </label>
-    <label>Email
-      <input type="email" name="donor_email" value="<%= donationForm.donor_email || '' %>" required>
-    </label>
-    <label>Phone Number
-      <input type="text" name="donor_phone" value="<%= donationForm.donor_phone || '' %>">
-    </label>
-    <label>Amount in PHP
-      <input type="number" name="amount" min="20" step="1" value="<%= donationForm.amount || '500' %>" required>
-    </label>
-    <label>Message
-      <textarea name="message" rows="4"><%= donationForm.message || '' %></textarea>
-    </label>
-    <button class="btn primary" type="submit">Proceed to PayMongo</button>
-    <small>Payment is processed on PayMongo's hosted checkout page. Final paid status should be verified in the PayMongo dashboard or webhook logs.</small>
-  </form>
-
-  <aside class="notice-box">
-    <h2>Event Participation</h2>
-    <p>Visitors who want to join volunteer orientations, donation drives, and coordinated activities can submit a participation request through the Events page.</p>
-    <a class="btn secondary" href="/events">View Events</a>
+      <small>Minimum donation is PHP 20. Final paid status is confirmed through PayMongo dashboard records or webhook logs.</small>
+    </form>
   </aside>
+</section>
+
+<section class="participation-callout">
+  <div>
+    <p class="eyebrow">Event Participation</p>
+    <h2>Join coordinated foundation activities</h2>
+    <p>Visitors who want to join volunteer orientations, donation drives, and coordinated activities can submit a participation request through the Events page.</p>
+  </div>
+  <a class="btn secondary" href="/events">View Events</a>
 </section>
 
 <%- include('../partials/public-footer') %>

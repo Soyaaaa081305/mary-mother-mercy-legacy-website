@@ -1,0 +1,56 @@
+<%- include('../../partials/admin-header', { title }) %>
+
+<section class="editor-preview-layout">
+  <form class="admin-panel form-grid" method="post" action="<%= action %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data" data-preview-form>
+    <label>Display Name or Alias
+      <input type="text" name="display_name" value="<%= member.display_name || '' %>" required data-preview-target="title">
+    </label>
+    <label>Role or Position
+      <input type="text" name="role_title" value="<%= member.role_title || '' %>" required data-preview-target="summary">
+    </label>
+    <label>Email
+      <input type="email" name="email" value="<%= member.email || '' %>" data-preview-target="email">
+    </label>
+    <label>Phone Number
+      <input type="text" name="phone_number" value="<%= member.phone_number || '' %>" data-preview-target="phone">
+    </label>
+    <label>Display Order
+      <input type="number" name="display_order" value="<%= member.display_order || 0 %>" min="0">
+    </label>
+    <label>Status
+      <select name="status">
+        <option value="Published" <%= member.status !== 'Draft' ? 'selected' : '' %>>Published</option>
+        <option value="Draft" <%= member.status === 'Draft' ? 'selected' : '' %>>Draft</option>
+      </select>
+    </label>
+    <label class="full-span">Profile Picture
+      <input type="file" name="profile_image" accept="image/jpeg,image/png,image/webp,image/gif" data-preview-image-input>
+    </label>
+    <% if (member.profile_image_path) { %>
+      <div class="image-preview full-span">
+        <img src="<%= member.profile_image_path %>" alt="<%= member.display_name %>">
+        <span>Current profile image</span>
+      </div>
+    <% } %>
+    <div class="form-actions">
+      <button class="btn primary" type="submit">Save Member</button>
+      <a class="btn secondary" href="/admin/contact-team">Cancel</a>
+      <a class="btn ghost" href="/contact" target="_blank">Open Contact Page</a>
+    </div>
+  </form>
+
+  <aside class="admin-panel live-preview">
+    <p class="eyebrow">Live Preview</p>
+    <article class="team-card preview-team-card">
+      <img data-preview-image src="<%= member.profile_image_path || '/images/placeholders/team-office.jpg' %>" alt="Profile preview">
+      <div>
+        <h3 data-preview-output="title"><%= member.display_name || 'Display Name' %></h3>
+        <p class="meta" data-preview-output="summary"><%= member.role_title || 'Role or Position' %></p>
+        <p data-preview-output="email"><%= member.email || 'email@example.com' %></p>
+        <p data-preview-output="phone"><%= member.phone_number || '+63 900 000 0000' %></p>
+      </div>
+    </article>
+  </aside>
+</section>
+
+<%- include('../../partials/admin-footer') %>

@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
-const EXEMPT_PATHS = new Set(['/webhooks/paymongo']);
+const EXEMPT_PATHS = new Set(['/webhooks/paymongo', '/webhook_paymongo.php']);
 
 function csrfProtection(req, res, next) {
   if (!req.session.csrfToken) {
@@ -14,7 +14,9 @@ function csrfProtection(req, res, next) {
     return next();
   }
 
-  if (req.body?._csrf === req.session.csrfToken) {
+  const submittedToken = req.body?._csrf || req.query?._csrf || req.get('x-csrf-token');
+
+  if (submittedToken === req.session.csrfToken) {
     return next();
   }
 
@@ -35,4 +37,3 @@ function csrfProtection(req, res, next) {
 module.exports = {
   csrfProtection
 };
-

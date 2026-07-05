@@ -1,6 +1,6 @@
 <%- include('../../partials/admin-header', { title }) %>
 
-<form class="admin-panel form-grid" method="post" action="<%= action %>" enctype="multipart/form-data">
+<form class="admin-panel form-grid" method="post" action="<%= action %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
   <div class="privacy-callout full-span">
     Reminder: Do not include real resident names, private medical details, personal trauma, or identifiable information unless written consent is documented.
   </div>
@@ -41,4 +41,3 @@
 </form>
 
 <%- include('../../partials/admin-footer') %>
-

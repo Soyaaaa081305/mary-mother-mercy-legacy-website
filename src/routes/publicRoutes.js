@@ -13,6 +13,15 @@ const renderHelpers = {
   nl2br
 };
 
+function pageHero(page, fallback = {}) {
+  return {
+    eyebrow: page?.hero_eyebrow || fallback.eyebrow || '',
+    title: page?.title || fallback.title || '',
+    summary: page?.hero_summary || page?.content || fallback.summary || '',
+    imagePath: page?.hero_image_path || fallback.imagePath || '/images/placeholders/compassion-care.jpg'
+  };
+}
+
 async function getPage(slug) {
   return getOne(
     `SELECT * FROM pages
@@ -86,6 +95,12 @@ router.get('/', async (req, res, next) => {
       events,
       videos,
       supportInfo,
+      hero: pageHero(homePage, {
+        eyebrow: 'Legacy, care, and compassionate service',
+        title: 'Mary Mother of Mercy Home',
+        summary: 'A dynamic legacy website and CMS for sharing the foundation mission and staff stories.',
+        imagePath: '/images/placeholders/compassion-care.jpg'
+      }),
       helpers: renderHelpers
     });
   } catch (error) {
@@ -102,7 +117,7 @@ router.get('/about', async (req, res, next) => {
     return res.render('public/page', {
       title: 'About',
       page,
-      eyebrow: 'About the Foundation',
+      hero: pageHero(page, { eyebrow: 'About the Foundation', title: 'About the Foundation' }),
       helpers: renderHelpers
     });
   } catch (error) {
@@ -129,6 +144,7 @@ router.get('/legacy', async (req, res, next) => {
       title: 'Legacy',
       page,
       entries,
+      hero: pageHero(page, { eyebrow: 'Foundation Legacy', title: 'Our Legacy' }),
       helpers: renderHelpers
     });
   } catch (error) {
@@ -159,15 +175,27 @@ router.get('/legacy/:id', async (req, res, next) => {
 
 router.get('/caregiver-stories', async (req, res, next) => {
   try {
-    const stories = await query(
-      `SELECT * FROM caregiver_stories
-       WHERE status = 'Published'
-       ORDER BY published_at DESC, created_at DESC`
-    );
+    const [page, stories] = await Promise.all([
+      getPage('stories'),
+      query(
+        `SELECT * FROM caregiver_stories
+         WHERE status = 'Published'
+         ORDER BY published_at DESC, created_at DESC`
+      )
+    ]);
 
-    res.render('public/stories', {
+    if (!pageIsPublished(page)) {
+      return renderNotPublished(res, 'Stories Not Published');
+    }
+
+    return res.render('public/stories', {
       title: 'Caregiver Stories',
+      page,
       stories,
+      hero: pageHero(page, {
+        eyebrow: 'Nurses and Caregivers Stories',
+        title: 'Stories from the Staff Who Serve'
+      }),
       helpers: renderHelpers
     });
   } catch (error) {
@@ -198,26 +226,34 @@ router.get('/caregiver-stories/:id', async (req, res, next) => {
 
 router.get('/gallery', async (req, res, next) => {
   try {
-    const categories = await query(
-      `SELECT gc.*, COUNT(gi.image_id) AS image_count
-       FROM gallery_categories gc
-       LEFT JOIN gallery_images gi
-        ON gi.category_id = gc.category_id
-        AND gi.status = 'Published'
-       GROUP BY gc.category_id
-       ORDER BY gc.category_name ASC`
-    );
+    const [page, categories, images] = await Promise.all([
+      getPage('gallery'),
+      query(
+        `SELECT gc.*, COUNT(gi.image_id) AS image_count
+         FROM gallery_categories gc
+         LEFT JOIN gallery_images gi
+          ON gi.category_id = gc.category_id
+          AND gi.status = 'Published'
+         GROUP BY gc.category_id
+         ORDER BY gc.category_name ASC`
+      ),
+      query(
+        `SELECT gi.*, gc.category_name
+         FROM gallery_images gi
+         JOIN gallery_categories gc ON gc.category_id = gi.category_id
+         WHERE gi.status = 'Published'
+         ORDER BY gc.category_name ASC, gi.created_at DESC`
+      )
+    ]);
 
-    const images = await query(
-      `SELECT gi.*, gc.category_name
-       FROM gallery_images gi
-       JOIN gallery_categories gc ON gc.category_id = gi.category_id
-       WHERE gi.status = 'Published'
-       ORDER BY gc.category_name ASC, gi.created_at DESC`
-    );
+    if (!pageIsPublished(page)) {
+      return renderNotPublished(res, 'Gallery Not Published');
+    }
 
-    res.render('public/gallery', {
+    return res.render('public/gallery', {
       title: 'Gallery',
+      page,
+      hero: pageHero(page, { eyebrow: 'Photo Gallery', title: 'Foundation Activities and Community Support' }),
       categories,
       images
     });
@@ -245,6 +281,7 @@ router.get('/support', async (req, res, next) => {
       title: 'Support',
       page,
       supportInfo,
+      hero: pageHero(page, { eyebrow: 'Support and Donation Information', title: 'Support the Foundation' }),
       donationForm: {},
       donationErrors: [],
       helpers: renderHelpers
@@ -292,6 +329,7 @@ router.post('/donate', async (req, res, next) => {
         title: 'Support',
         page,
         supportInfo,
+        hero: pageHero(page, { eyebrow: 'Support and Donation Information', title: 'Support the Foundation' }),
         donationForm: req.body,
         donationErrors,
         helpers: renderHelpers
@@ -379,7 +417,7 @@ router.get('/donation/cancel', async (req, res, next) => {
   }
 });
 
-router.post('/webhooks/paymongo', async (req, res, next) => {
+async function handlePaymongoWebhook(req, res, next) {
   try {
     if (!verifyPaymongoWebhook(req)) {
       return res.status(400).json({ received: false, error: 'Invalid PayMongo webhook signature.' });
@@ -416,19 +454,35 @@ router.post('/webhooks/paymongo', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+}
+
+router.post('/webhooks/paymongo', handlePaymongoWebhook);
+router.post('/webhook_paymongo.php', handlePaymongoWebhook);
+
+router.get('/webhook_paymongo.php', (req, res) => {
+  res.status(200).send('PayMongo webhook endpoint is ready. Configure PayMongo to POST events to this URL.');
 });
 
 router.get('/events', async (req, res, next) => {
   try {
-    const events = await query(
-      `SELECT * FROM events
-       WHERE status = 'Published'
-       ORDER BY event_date ASC, created_at DESC`
-    );
+    const [page, events] = await Promise.all([
+      getPage('events'),
+      query(
+        `SELECT * FROM events
+         WHERE status = 'Published'
+         ORDER BY event_date ASC, created_at DESC`
+      )
+    ]);
 
-    res.render('public/events', {
+    if (!pageIsPublished(page)) {
+      return renderNotPublished(res, 'Events Not Published');
+    }
+
+    return res.render('public/events', {
       title: 'Events',
+      page,
       events,
+      hero: pageHero(page, { eyebrow: 'Events and Participation', title: 'Join Coordinated Foundation Activities' }),
       helpers: renderHelpers
     });
   } catch (error) {
@@ -510,15 +564,24 @@ router.post('/events/:id/participate', async (req, res, next) => {
 
 router.get('/videos', async (req, res, next) => {
   try {
-    const videos = await query(
-      `SELECT * FROM site_videos
-       WHERE status = 'Published'
-       ORDER BY display_order ASC, created_at DESC`
-    );
+    const [page, videos] = await Promise.all([
+      getPage('videos'),
+      query(
+        `SELECT * FROM site_videos
+         WHERE status = 'Published'
+         ORDER BY display_order ASC, created_at DESC`
+      )
+    ]);
 
-    res.render('public/videos', {
+    if (!pageIsPublished(page)) {
+      return renderNotPublished(res, 'Videos Not Published');
+    }
+
+    return res.render('public/videos', {
       title: 'Videos',
+      page,
       videos,
+      hero: pageHero(page, { eyebrow: 'Foundation Videos', title: 'Watch Approved Website Videos' }),
       helpers: renderHelpers
     });
   } catch (error) {
@@ -532,9 +595,16 @@ router.get('/contact', async (req, res, next) => {
     if (!pageIsPublished(page)) {
       return renderNotPublished(res, 'Contact Not Published');
     }
+    const teamMembers = await query(
+      `SELECT * FROM contact_team_members
+       WHERE status = 'Published'
+       ORDER BY display_order ASC, created_at ASC`
+    );
     return res.render('public/contact', {
       title: 'Contact',
       page,
+      hero: pageHero(page, { eyebrow: 'Official Contacts', title: 'Contact Mary Mother of Mercy Home' }),
+      teamMembers,
       form: {},
       errors: [],
       helpers: renderHelpers
@@ -569,6 +639,12 @@ router.post('/contact', async (req, res, next) => {
       return res.status(422).render('public/contact', {
         title: 'Contact',
         page: contactPage,
+        hero: pageHero(contactPage, { eyebrow: 'Official Contacts', title: 'Contact Mary Mother of Mercy Home' }),
+        teamMembers: await query(
+          `SELECT * FROM contact_team_members
+           WHERE status = 'Published'
+           ORDER BY display_order ASC, created_at ASC`
+        ),
         form,
         errors,
         helpers: renderHelpers

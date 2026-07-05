@@ -2,11 +2,15 @@
 
 <%- include('../partials/page-hero', { hero }) %>
 
-<section class="reading-section">
-  <p><%- helpers.nl2br(page.content) %></p>
+<section class="reading-section about-copy">
+  <% String(page.content || '').split(/\n{2,}/).forEach((paragraph) => { %>
+    <% if (paragraph.trim()) { %>
+      <p><%- helpers.nl2br(paragraph.trim()) %></p>
+    <% } %>
+  <% }) %>
 </section>
 
-<section class="values-grid">
+<section class="values-grid about-values">
   <article>
     <h2>Mission</h2>
     <p>Service to the elderly, rejected, forgotten, and abandoned.</p>

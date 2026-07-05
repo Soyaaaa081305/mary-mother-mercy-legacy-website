@@ -661,11 +661,46 @@ small,
   font-size: 1.1rem;
 }
 
+.about-copy {
+  display: grid;
+  gap: 16px;
+  padding-bottom: clamp(18px, 4vw, 36px);
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+
+.about-copy p {
+  margin: 0;
+  text-align: left;
+}
+
 .values-grid,
 .support-layout {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+}
+
+.about-values {
+  padding-top: clamp(18px, 4vw, 36px);
+  gap: 16px;
+}
+
+.about-values article {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 22px;
+}
+
+.about-values h2,
+.about-values p {
+  margin: 0;
+}
+
+.about-values p {
+  text-align: left;
+  line-height: 1.65;
 }
 
 .timeline {
